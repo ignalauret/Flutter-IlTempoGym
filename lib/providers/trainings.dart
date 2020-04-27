@@ -4,7 +4,7 @@ import '../models/training.dart';
 class Trainings with ChangeNotifier {
   Trainings(this.authToken);
 
-  List<Training> _trainings = [];
+  //List<Training> _trainings = [];
   final String authToken;
 
   List<Training> get trainings {
@@ -14,11 +14,13 @@ class Trainings with ChangeNotifier {
         description: "Hacemos musculacion",
         teacher: "Prof. Jorge Gonzalez",
         imageUrl: "assets/img/musculacion.jpg",
-        schedule: {
-          "Lun": ["9:30", "18:30"],
-          "Mie": ["17:00"],
-        },
-        dbUrl: "https://il-tempo-dda8e.firebaseio.com/musculacion.json?auth=$authToken",
+        schedule: [
+          DateTime(2020, 4, 27, 9, 30),
+          DateTime(2020, 4, 27, 18, 30),
+          DateTime(2020, 4, 29, 17, 0)
+        ],
+        dbUrl:
+            "https://il-tempo-dda8e.firebaseio.com/musculacion.json?auth=$authToken",
         maxSchedules: 3,
       ),
       Training(
@@ -26,11 +28,13 @@ class Trainings with ChangeNotifier {
         description: "Hacemos musculacion",
         teacher: "Prof. Adrian Gimenez",
         imageUrl: "assets/img/zumba.jpg",
-        schedule: {
-          "Lun": ["9:30", "18:30"],
-          "Mie": ["17:00"],
-        },
-        dbUrl: "https://il-tempo-dda8e.firebaseio.com/zumba.json?auth=$authToken",
+        schedule: [
+          DateTime(2020, 4, 27, 9, 30),
+          DateTime(2020, 4, 27, 18, 30),
+          DateTime(2020, 4, 29, 17, 0)
+        ],
+        dbUrl:
+            "https://il-tempo-dda8e.firebaseio.com/zumba.json?auth=$authToken",
         maxSchedules: 2,
       ),
       Training(
@@ -38,14 +42,15 @@ class Trainings with ChangeNotifier {
         description: "Hacemos musculacion",
         teacher: "Prof. Gabriela Rodriguez",
         imageUrl: "assets/img/spinning.jpeg",
-        schedule: {
-          "Lun": ["9:30", "18:30"],
-          "Mie": ["17:00"],
-        },
-        dbUrl: "https://il-tempo-dda8e.firebaseio.com/spinning.json?auth=$authToken",
+        schedule: [
+          DateTime(2020, 4, 27, 9, 30),
+          DateTime(2020, 4, 27, 18, 30),
+          DateTime(2020, 4, 29, 17, 0)
+        ],
+        dbUrl:
+            "https://il-tempo-dda8e.firebaseio.com/spinning.json?auth=$authToken",
         maxSchedules: 2,
       ),
     ];
   }
-
 }

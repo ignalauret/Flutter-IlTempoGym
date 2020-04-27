@@ -19,6 +19,7 @@ environment:
 dependencies:
   http:
   provider:
+  intl:
   flutter:
     sdk: flutter
 

@@ -5,7 +5,7 @@ class Training {
   final String description;
   final String teacher;
   final String imageUrl;
-  final Map<String, List<String>> schedule;
+  final List<DateTime> schedule;
   final String dbUrl;
   final int maxSchedules;
 

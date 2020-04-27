@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:iltempo/models/training.dart';
 import 'package:iltempo/screens/reserve_screeen.dart';
 import 'package:iltempo/utils/constants.dart';
+import 'package:iltempo/utils/utils.dart';
 import 'package:iltempo/widgets/schedule_card.dart';
 
 class TrainingDetailScreen extends StatelessWidget {
@@ -102,8 +103,7 @@ class TrainingDetailScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => ScheduleCard(
                   day: days[index],
-                  hours: training.schedule[days[index]],
-                ),
+                  hours: hoursOfDay(training.schedule, days[index])),
                 itemCount: 5,
               ),
             ),

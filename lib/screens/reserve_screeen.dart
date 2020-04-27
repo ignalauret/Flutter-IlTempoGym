@@ -8,6 +8,7 @@ import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
 import 'package:iltempo/widgets/info_card.dart';
 import 'package:iltempo/widgets/select_day_card.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/training.dart';
 
@@ -25,9 +26,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
   Training training;
 
-  Map<String, Map<String, int>> counts = {};
-  String selectedDay = "Lun";
-  String selectedHour = "9:30";
+  Map<String, int> counts = {};
+  String selectedHour = "";
   bool _loading = true;
 
   Future<void> fetchTrainings(Training training) async {
@@ -50,9 +50,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
       }
       setState(() {
         extractedData.forEach((key, data) {
-          String day = data["dia"];
           String hour = data["hora"];
-          counts[day][hour]++;
+          counts[hour]++;
         });
         _loading = false;
       });
@@ -82,8 +81,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
   void initState() {
     Future.delayed(Duration.zero).then((_) {
       training = ModalRoute.of(context).settings.arguments;
+      print("countsMap");
       _createCountsMap(training);
+      print("FetchTrainings");
       fetchTrainings(training);
+      print("UserData");
       fetchUserData();
     });
     super.initState();
@@ -91,17 +93,18 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
   void _createCountsMap(Training training) {
     if (counts.keys.length > 0) return;
-    training.schedule.forEach((day, hour) {
-      if (!counts.containsKey(day)) counts.addAll({day: {}});
-      hour.forEach((hour) {
-        if (!counts[day].containsKey(hour)) counts[day].addAll({hour: 0});
-      });
+    final DateTime nextDay = nextClassDay(training.schedule);
+    training.schedule.forEach((schedule) {
+      if (schedule.weekday != nextDay.weekday) return;
+      if (!counts.containsKey(DateFormat("H:mm").format(schedule))) {
+        counts.addAll({DateFormat("H:mm").format(schedule): 0});
+      }
     });
   }
 
   void createTurn(Training training) {
-    if (counts[selectedDay][selectedHour] >= training.maxSchedules ||
-        selectedHour.isEmpty) return;
+    if (counts[selectedHour] >= training.maxSchedules || selectedHour.isEmpty)
+      return;
     final authData = Provider.of<Auth>(context, listen: false);
     final url = training.dbUrl;
     http.post(
@@ -110,37 +113,25 @@ class _ReserveScreenState extends State<ReserveScreen> {
         "dni": dni,
         "nombre": name + " " + lastName,
         "clase": training.name,
-        "dia": selectedDay,
+        "dia": intToDay(nextClassDay(training.schedule).weekday),
         "hora": selectedHour,
         "uid": authData.userId,
       }),
     );
   }
 
-//  List<Widget> _buildDaySelector(Training training) {
-//    List<Widget> result = [];
-//    training.schedule.keys.forEach(
-//      (day) => result.add(
-//        SelectDayCard(day, selectedDay == day, onDayTap),
-//      ),
-//    );
-//    return result;
-//  }
-
-  void onDayTap(String day) {
-    setState(() {
-      selectedDay = day;
-      selectedHour = counts[day].keys.toList()[0];
-    });
-  }
-
   List<Widget> _buildHourSelector(Training training) {
+    final DateTime nextDay = nextClassDay(training.schedule);
+    if(selectedHour.isEmpty) selectedHour = DateFormat("H:mm").format(training.schedule.firstWhere((schedule) => schedule.weekday == nextDay.weekday));
     List<Widget> result = [];
-    training.schedule[selectedDay].forEach(
-      (hour) => result.add(
-        SelectDayCard(hour, selectedHour == hour, onHourTap),
-      ),
-    );
+    training.schedule
+        .where((schedule) => schedule.weekday == nextDay.weekday)
+        .forEach(
+          (schedule) => result.add(
+            SelectDayCard(DateFormat("H:mm").format(schedule),
+                selectedHour == DateFormat("H:mm").format(schedule), onHourTap),
+          ),
+        );
     return result;
   }
 
@@ -152,6 +143,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("StartingBuild");
     final size = MediaQuery.of(context).size;
     training = ModalRoute.of(context).settings.arguments;
     _createCountsMap(training);
@@ -239,9 +231,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
 //                ),
                       InfoCard(
                           "Dia",
-                          counts == null
+                          counts.isEmpty
                               ? "Cargando..."
-                              : nextClassDay(counts.keys.toList())),
+                              : formatDate(nextClassDay(training.schedule))),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 15,
@@ -272,10 +264,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
                         child: Text(
                           _loading
                               ? "Cargando..."
-                              : counts[selectedDay][selectedHour] <
-                                      training.maxSchedules
-                                  ? "Anotados para $selectedDay a las $selectedHour: ${counts[selectedDay][selectedHour]} de ${training.maxSchedules}"
-                                  : "Lo sentimos, la clase del $selectedDay a las $selectedHour está llena",
+                              : counts[selectedHour] < training.maxSchedules
+                                  ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${training.maxSchedules}"
+                                  : "Lo sentimos, la clase de las $selectedHour está llena",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -292,8 +283,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                   padding: EdgeInsets.symmetric(
                       horizontal: size.width * 0.25, vertical: 10),
                   onPressed: (_loading ||
-                          counts[selectedDay][selectedHour] >=
-                              training.maxSchedules ||
+                          counts[selectedHour] >= training.maxSchedules ||
                           selectedHour.isEmpty)
                       ? null
                       : () {

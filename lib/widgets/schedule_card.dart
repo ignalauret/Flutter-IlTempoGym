@@ -18,10 +18,10 @@ class ScheduleCard extends StatelessWidget {
         ),
       ),
     ];
-    if(hours == null || hours.length < 2)
+    if(hours.isEmpty || hours.length < 2)
       body.add(SizedBox(height: MediaQuery.of(context).size.height * 0.020,));
     else body.add(SizedBox(height: MediaQuery.of(context).size.height * 0.012,));
-    if (hours == null)
+    if (hours.isEmpty)
       body.add(
         Text(
           "-",
@@ -47,7 +47,6 @@ class ScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
     return Container(
       margin: EdgeInsets.all(width * 0.025),
       padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 15),
