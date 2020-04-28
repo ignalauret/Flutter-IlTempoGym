@@ -4,12 +4,20 @@ DateTime nextClassDay(List<DateTime> possibleDays) {
   for (int i = 0; i < 7; i++) {
     DateTime returnDay;
     possibleDays.forEach((day) {
-      if(day.weekday == DateTime.now().add(Duration(days:i)).weekday)
+      if(day.weekday == DateTime.now().add(Duration(days:i)).weekday && (i == 0 && compareHours(day, DateTime.now())))
         returnDay = day;
     });
     if(returnDay != null) return returnDay;
   }
   return null;
+}
+
+// Return if d1 is before d2 relative to their hours.
+bool compareHours(DateTime d1, DateTime d2) {
+  if(d1.hour > d2.hour) return false;
+  if(d1.minute > d2.minute) return false;
+  if(d1.second > d2.second) return false;
+  return true;
 }
 
 int dayToInt(String day) {

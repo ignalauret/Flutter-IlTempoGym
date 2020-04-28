@@ -32,13 +32,15 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
   Future<void> fetchTrainings(Training training) async {
     try {
-      final response = await http.get(training.dbUrl);
+      final response = await http.get(training.dbUrl +
+          '&orderBy="fecha"&equalTo="${nextClassDay(training.schedule).day.toString() + "/" + nextClassDay(training.schedule).month.toString()}"');
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      print(extractedData);
       if (counts.keys.length > 0) {
         counts.clear();
         _createCountsMap(training);
       }
-      if (extractedData == null) {
+      if (extractedData == null || extractedData.length == 0) {
         setState(() {
           _loading = false;
         });
@@ -65,6 +67,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
     final response = await http.get(
         "https://il-tempo-dda8e.firebaseio.com/usuarios/${authData.userId}.json?auth=${authData.token}");
     final responseData = json.decode(response.body);
+    print(responseData);
     if (responseData == null) return;
     if (responseData["error"] != null) {
       // Hubo un error
@@ -81,11 +84,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
   void initState() {
     Future.delayed(Duration.zero).then((_) {
       training = ModalRoute.of(context).settings.arguments;
-      print("countsMap");
       _createCountsMap(training);
-      print("FetchTrainings");
       fetchTrainings(training);
-      print("UserData");
       fetchUserData();
     });
     super.initState();
@@ -114,15 +114,19 @@ class _ReserveScreenState extends State<ReserveScreen> {
         "nombre": name + " " + lastName,
         "clase": training.name,
         "dia": intToDay(nextClassDay(training.schedule).weekday),
+        "fecha": nextClassDay(training.schedule).day.toString() +
+            "/" +
+            nextClassDay(training.schedule).month.toString(),
         "hora": selectedHour,
-        "uid": authData.userId,
       }),
     );
   }
 
   List<Widget> _buildHourSelector(Training training) {
     final DateTime nextDay = nextClassDay(training.schedule);
-    if(selectedHour.isEmpty) selectedHour = DateFormat("H:mm").format(training.schedule.firstWhere((schedule) => schedule.weekday == nextDay.weekday));
+    if (selectedHour.isEmpty)
+      selectedHour = DateFormat("H:mm").format(training.schedule
+          .firstWhere((schedule) => schedule.weekday == nextDay.weekday));
     List<Widget> result = [];
     training.schedule
         .where((schedule) => schedule.weekday == nextDay.weekday)
@@ -250,6 +254,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                   textAlign: TextAlign.start,
                                   style: TITLE_STYLE,
                                 )),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: _buildHourSelector(training),
