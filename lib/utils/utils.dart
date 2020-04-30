@@ -1,23 +1,23 @@
 import 'package:intl/intl.dart';
 
-DateTime nextClassDay(List<DateTime> possibleDays) {
-  for (int i = 0; i < 7; i++) {
-    DateTime returnDay;
-    possibleDays.forEach((day) {
-      if(day.weekday == DateTime.now().add(Duration(days:i)).weekday && (i == 0 && compareHours(day, DateTime.now())))
-        returnDay = day;
-    });
-    if(returnDay != null) return returnDay;
-  }
-  return null;
-}
-
 // Return if d1 is before d2 relative to their hours.
 bool compareHours(DateTime d1, DateTime d2) {
-  if(d1.hour > d2.hour) return false;
-  if(d1.minute > d2.minute) return false;
-  if(d1.second > d2.second) return false;
+  if (d1.hour > d2.hour) return false;
+  if (d1.hour == d2.hour && d1.minute > d2.minute) return false;
+  if (d1.hour == d2.hour && d1.minute == d2.minute && d1.second > d2.second) return false;
   return true;
+}
+
+DateTime nextClassDay(List<DateTime> possibleDays) {
+  for (int i = 0; i < 7; i++) {
+    for (DateTime day in possibleDays) {
+      if (day.weekday == DateTime.now().add(Duration(days: i)).weekday) {
+        if (i != 0 || compareHours(DateTime.now(), day))
+        return DateTime.now().add(Duration(days: i));
+      }
+    }
+  }
+  return null;
 }
 
 int dayToInt(String day) {
@@ -67,7 +67,7 @@ List<String> hoursOfDay(List<DateTime> schedules, String day) {
 
 String formatDate(DateTime date) {
   String day = "";
-  switch(date.weekday) {
+  switch (date.weekday) {
     case 1:
       day = "Lunes";
       break;
@@ -89,7 +89,7 @@ String formatDate(DateTime date) {
   }
   String number = date.day.toString();
   String month = "";
-  switch(date.month) {
+  switch (date.month) {
     case 1:
       month = "Enero";
       break;

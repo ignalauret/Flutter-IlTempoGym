@@ -5,6 +5,7 @@ class Training {
   final String description;
   final String teacher;
   final String imageUrl;
+  final String bannerUrl;
   final List<DateTime> schedule;
   final String dbUrl;
   final int maxSchedules;
@@ -17,5 +18,6 @@ class Training {
     @required this.schedule,
     @required this.dbUrl,
     @required this.maxSchedules,
+    @required this.bannerUrl,
   });
 }

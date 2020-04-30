@@ -8,6 +8,8 @@ class Auth extends ChangeNotifier {
   String _token;
   DateTime _expireDate;
   String _userId;
+  String _userName;
+  String _userDni;
 
   bool get isAuth {
     return token != null;
@@ -24,6 +26,28 @@ class Auth extends ChangeNotifier {
       return _token;
     }
     return null;
+  }
+
+  String get userName {
+    return _userName == null ? "Nombre default" : _userName;
+  }
+
+  String get userDni {
+    return _userDni == null ? "12345678" : _userDni;
+  }
+
+  Future<void> fetchUserData() async {
+    final response = await http.get(
+        "https://il-tempo-dda8e.firebaseio.com/usuarios/$_userId.json?auth=$_token");
+    final responseData = json.decode(response.body);
+    if (responseData == null) return;
+    if (responseData["error"] != null) {
+      // Hubo un error
+      return;
+    }
+
+    _userName = responseData["nombre"];
+    _userDni = responseData["dni"].toString();
   }
 
   Future<String> logIn(String username, String password) async {
@@ -49,6 +73,7 @@ class Auth extends ChangeNotifier {
       _userId = responseData["localId"];
       _expireDate = DateTime.now()
           .add(Duration(seconds: int.parse(responseData["expiresIn"])));
+      fetchUserData();
       notifyListeners();
       return "";
     } on HttpException catch (error) {

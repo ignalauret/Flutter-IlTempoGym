@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iltempo/providers/auth.dart';
+import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/screens/login_screen.dart';
+import 'package:iltempo/screens/profile_screen.dart';
 import 'package:iltempo/screens/reserve_screeen.dart';
 import 'package:iltempo/screens/training_detail_screen.dart';
 import 'package:provider/provider.dart';
@@ -15,13 +17,18 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
-        ChangeNotifierProxyProvider<Auth, Trainings>(
+        ChangeNotifierProxyProvider<Auth, Turns> (
+          create: (ctx) => Turns(null, null),
+          update: (ctx, auth, previousTrainings) => Turns(auth.token, auth.userDni),
+        ),
+        ChangeNotifierProxyProvider<Auth, Trainings> (
           create: (ctx) => Trainings(null),
           update: (ctx, auth, previousTrainings) => Trainings(auth.token),
         )
       ],
       child: Consumer<Auth>(
         builder: (ctx, authData, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Il Tempo',
           theme: ThemeData(
             canvasColor: Colors.transparent,
@@ -33,6 +40,7 @@ class MyApp extends StatelessWidget {
           routes: {
             TrainingDetailScreen.routeName: (context) => TrainingDetailScreen(),
             ReserveScreen.routeName: (context) => ReserveScreen(),
+            ProfileScreen.routeName: (context) => ProfileScreen(),
           },
         ),
       ),

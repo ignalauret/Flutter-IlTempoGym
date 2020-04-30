@@ -21,7 +21,6 @@ class ReserveScreen extends StatefulWidget {
 
 class _ReserveScreenState extends State<ReserveScreen> {
   String name = "Cargando...";
-  String lastName = " ";
   String dni = "Cargando...";
 
   Training training;
@@ -62,23 +61,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
     }
   }
 
-  Future<void> fetchUserData() async {
-    final authData = Provider.of<Auth>(context, listen: false);
-    final response = await http.get(
-        "https://il-tempo-dda8e.firebaseio.com/usuarios/${authData.userId}.json?auth=${authData.token}");
-    final responseData = json.decode(response.body);
-    print(responseData);
-    if (responseData == null) return;
-    if (responseData["error"] != null) {
-      // Hubo un error
-      return;
-    }
-    setState(() {
-      name = responseData["nombre"];
-      lastName = responseData["apellido"];
-      dni = responseData["dni"].toString();
-    });
-  }
+
 
   @override
   void initState() {
@@ -86,7 +69,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
       training = ModalRoute.of(context).settings.arguments;
       _createCountsMap(training);
       fetchTrainings(training);
-      fetchUserData();
     });
     super.initState();
   }
@@ -105,13 +87,12 @@ class _ReserveScreenState extends State<ReserveScreen> {
   void createTurn(Training training) {
     if (counts[selectedHour] >= training.maxSchedules || selectedHour.isEmpty)
       return;
-    final authData = Provider.of<Auth>(context, listen: false);
     final url = training.dbUrl;
     http.post(
       url,
       body: json.encode({
         "dni": dni,
-        "nombre": name + " " + lastName,
+        "nombre": name,
         "clase": training.name,
         "dia": intToDay(nextClassDay(training.schedule).weekday),
         "fecha": nextClassDay(training.schedule).day.toString() +
@@ -147,9 +128,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("StartingBuild");
     final size = MediaQuery.of(context).size;
     training = ModalRoute.of(context).settings.arguments;
+    final authData = Provider.of<Auth>(context);
+    name = authData.userName;
+    dni = authData.userDni;
     _createCountsMap(training);
     return Scaffold(
       backgroundColor: Colors.black,
@@ -280,7 +263,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                           ),
                         ),
                       ),
-                      InfoCard("Nombre", name + " " + lastName),
+                      InfoCard("Nombre", name),
                       InfoCard("Dni", dni),
                     ],
                   ),

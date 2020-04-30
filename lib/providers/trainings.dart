@@ -11,13 +11,15 @@ class Trainings with ChangeNotifier {
     return [
       Training(
         name: "Musculación",
-        description: "Hacemos musculacion",
-        teacher: "Prof. Jorge Gonzalez",
+        description:
+            "Capacidad general de rendimiento.Mejora la postura.Mejora de la fuerza muscular",
+        teacher: "Jorge Gonzalez",
         imageUrl: "assets/img/musculacion.jpg",
+        bannerUrl: "assets/img/musculacion2.jpg",
         schedule: [
           DateTime(2020, 4, 27, 9, 30),
           DateTime(2020, 4, 27, 18, 30),
-          DateTime(2020, 4, 29, 17, 0)
+          DateTime(2020, 4, 29, 17, 0),
         ],
         dbUrl:
             "https://il-tempo-dda8e.firebaseio.com/musculacion.json?auth=$authToken",
@@ -25,31 +27,35 @@ class Trainings with ChangeNotifier {
       ),
       Training(
         name: "Zumba",
-        description: "Hacemos musculacion",
-        teacher: "Prof. Adrian Gimenez",
+        description:
+            "Tonifica y moldea tu cuerpo.Mejora tu coordinación y agilidad. Mejora la salud de tus huesos.Aumenta tu capacidad pulmonar",
+        teacher: "Adrian Gimenez",
         imageUrl: "assets/img/zumba.jpg",
+        bannerUrl: "assets/img/zumba2.jpg",
         schedule: [
           DateTime(2020, 4, 27, 9, 30),
-          DateTime(2020, 4, 27, 18, 30),
-          DateTime(2020, 4, 29, 17, 0)
+          DateTime(2020, 4, 27, 17, 00),
+          DateTime(2020, 4, 29, 17, 00)
         ],
         dbUrl:
             "https://il-tempo-dda8e.firebaseio.com/zumba.json?auth=$authToken",
-        maxSchedules: 2,
+        maxSchedules: 3,
       ),
       Training(
         name: "Spinning",
-        description: "Hacemos musculacion",
-        teacher: "Prof. Gabriela Rodriguez",
+        description:
+            "Ayuda a estilizar la figura.Fortalecer huesos y músculos.Mejorar el sistema cardiovascular.Mejorar el sistema cardiovascular",
+        teacher: "Lic. Gabriela Rodriguez",
         imageUrl: "assets/img/spinning.jpeg",
+        bannerUrl: "assets/img/spinning2.jpg",
         schedule: [
           DateTime(2020, 4, 27, 9, 30),
           DateTime(2020, 4, 27, 18, 30),
-          DateTime(2020, 4, 29, 17, 0)
+          DateTime(2020, 4, 29, 18, 30)
         ],
         dbUrl:
             "https://il-tempo-dda8e.firebaseio.com/spinning.json?auth=$authToken",
-        maxSchedules: 2,
+        maxSchedules: 3,
       ),
     ];
   }

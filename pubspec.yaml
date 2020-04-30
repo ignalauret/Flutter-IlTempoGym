@@ -49,8 +49,9 @@ flutter:
     - assets/img/musculacion.jpg
     - assets/img/musculacion2.jpg
     - assets/img/spinning.jpg
-    - assets/img/spinning.jpeg
+    - assets/img/spinning2.jpg
     - assets/img/zumba.jpg
+    - assets/img/zumba2.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

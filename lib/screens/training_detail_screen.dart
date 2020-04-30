@@ -4,7 +4,9 @@ import 'package:iltempo/models/training.dart';
 import 'package:iltempo/screens/reserve_screeen.dart';
 import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
+import 'package:iltempo/widgets/info_card.dart';
 import 'package:iltempo/widgets/schedule_card.dart';
+import 'package:provider/provider.dart';
 
 class TrainingDetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";
@@ -13,6 +15,8 @@ class TrainingDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Training training = ModalRoute.of(context).settings.arguments;
+
+    final descriptions = training.description.split(("."));
 
     return Scaffold(
       body: Container(
@@ -30,7 +34,7 @@ class TrainingDetailScreen extends StatelessWidget {
                       bottomRight: Radius.circular(25),
                       bottomLeft: Radius.circular(25)),
                   child: Image.asset(
-                    "assets/img/musculacion2.jpg",
+                    training.bannerUrl,
                   ),
                 ),
                 Positioned(
@@ -73,7 +77,7 @@ class TrainingDetailScreen extends StatelessWidget {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
                   margin: const EdgeInsets.only(
@@ -83,11 +87,34 @@ class TrainingDetailScreen extends StatelessWidget {
                   ),
                   child: Text(
                     "Horarios",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
+                    textAlign: TextAlign.center,
+                    style: TITLE_STYLE,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                    right: 20,
+                    top: 15,
+                    bottom: 10,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.timer,
+                        color: Colors.white70,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "Duración: 1 hora",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -95,27 +122,54 @@ class TrainingDetailScreen extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.14,
-              margin: const EdgeInsets.symmetric(
-                horizontal: 0,
-                vertical: 0,
+              margin: const EdgeInsets.only(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 5,
               ),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => ScheduleCard(
-                  day: days[index],
-                  hours: hoursOfDay(training.schedule, days[index])),
+                    day: days[index],
+                    hours: hoursOfDay(training.schedule, days[index])),
                 itemCount: 5,
               ),
             ),
-            Text(
-              training.description,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-              ),
-            ),
+            InfoCard("Profesor", training.teacher),
             Expanded(
-              child: Container(),
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: descriptions
+                      .map(
+                        (description) => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              description,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.check,
+                              color: MAIN_COLOR,
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
             ),
             FlatButton(
               child: Text("Sacar Turno"),

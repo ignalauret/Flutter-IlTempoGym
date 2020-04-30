@@ -102,7 +102,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       },
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        child: Text("Billetera",
+                        child: Text("Nuestras clases",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 22)),
                       ),
@@ -118,7 +118,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       },
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        child: Text("Finanzas",
+                        child: Text("Mi perfil",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 22)),
                       ),
@@ -134,39 +134,7 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                       },
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        child: Text("Calculadora",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 22)),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedScreenIndex = 3;
-                          _controller.reverse();
-                          isCollapsed = true;
-                        });
-                      },
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text("Lista de compras",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 22)),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedScreenIndex = 4;
-                          _controller.reverse();
-                          isCollapsed = true;
-                        });
-                      },
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text("Configuracion",
+                        child: Text("Mis turnos",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 22)),
                       ),
