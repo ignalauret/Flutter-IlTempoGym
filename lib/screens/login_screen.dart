@@ -16,11 +16,35 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text("Error en la autenticación"),
-              content: Text(message),
+              backgroundColor: CARD_COLOR,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              contentPadding: const EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: 0,
+              ),
+              titlePadding: const EdgeInsets.only(
+                top: 20,
+                bottom: 0,
+                left: 20,
+                right: 20,
+              ),
+              title: Text(
+                "Error en la autenticación",
+                style: TextStyle(color: Colors.red),
+              ),
+              content: Text(
+                message,
+                style: TextStyle(color: Colors.white),
+              ),
               actions: <Widget>[
                 FlatButton(
-                  child: Text("Ok"),
+                  child: Text(
+                    "Ok",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () => Navigator.of(ctx).pop(),
                 )
               ],
@@ -105,25 +129,21 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.25,
                   vertical: 10),
-              onPressed: (_usernameController.text.isEmpty)
-                  ? null
-                  : () async {
-                      String result =
-                          await Provider.of<Auth>(context, listen: false).logIn(
-                              _usernameController.text,
-                              _passwordController.text);
-                      if (result.isEmpty) return;
-                      var errorMessage =
-                          "Lo sentimos hubo un problema, intentelo denuevo mas tarde";
-                      if (result.contains("INVALID_PASSWORD")) {
-                        errorMessage = "Contraseña incorrecta";
-                      } else if (result.contains("EMAIL_NOT_FOUND")) {
-                        errorMessage = "Usuario no encontrado";
-                      } else if (result.contains("INVALID_EMAIL")) {
-                        errorMessage = "Usuario invalido";
-                      }
-                      _showErrorMessage(errorMessage);
-                    },
+              onPressed: () async {
+                String result = await Provider.of<Auth>(context, listen: false)
+                    .logIn(_usernameController.text, _passwordController.text);
+                if (result.isEmpty) return;
+                var errorMessage =
+                    "Lo sentimos hubo un problema, intentelo denuevo mas tarde";
+                if (result.contains("INVALID_PASSWORD")) {
+                  errorMessage = "Contraseña incorrecta";
+                } else if (result.contains("EMAIL_NOT_FOUND")) {
+                  errorMessage = "Usuario no encontrado";
+                } else if (result.contains("INVALID_EMAIL")) {
+                  errorMessage = "Usuario invalido";
+                }
+                _showErrorMessage(errorMessage);
+              },
               textColor: Colors.white,
               color: MAIN_COLOR,
               shape: RoundedRectangleBorder(
