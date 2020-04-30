@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iltempo/providers/auth.dart';
-import 'package:iltempo/screens/menu_dashboard_screen.dart';
 import 'package:iltempo/utils/constants.dart';
 import 'package:provider/provider.dart';
-import '../models/http_exception.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

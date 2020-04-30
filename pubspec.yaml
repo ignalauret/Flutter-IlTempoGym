@@ -21,6 +21,7 @@ dependencies:
   provider:
   intl:
   shared_preferences:
+  positioned_tap_detector:
   flutter:
     sdk: flutter
 

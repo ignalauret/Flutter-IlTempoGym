@@ -10,6 +10,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authData = Provider.of<Auth>(context);
+    print("Auth Data:");
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -68,26 +69,14 @@ class ProfileScreen extends StatelessWidget {
                 Positioned(
                   top: 30,
                   right: 5,
-                  child: FlatButton(
-                    padding: const EdgeInsets.only(left: 0, right: 10),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.exit_to_app,
-                          size: 25,
-                          color: MAIN_COLOR,
-                        ),
-                        Text(
-                          "Logout",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
+                  child: IconButton(
+                    tooltip: "Salir",
+                    icon: Icon(
+                      Icons.exit_to_app,
+                      color: Colors.white,
+                      size: 30,
                     ),
-                    color: Colors.white70,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+                    padding: const EdgeInsets.all(8),
                     onPressed: () {
                       authData.logOut();
                       Navigator.of(context).pop();

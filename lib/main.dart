@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:iltempo/providers/auth.dart';
 import 'package:iltempo/providers/turns.dart';
+import 'package:iltempo/screens/home_page.dart';
 import 'package:iltempo/screens/login_screen.dart';
 import 'package:iltempo/screens/profile_screen.dart';
 import 'package:iltempo/screens/reserve_screeen.dart';
 import 'package:iltempo/screens/splash_screen.dart';
 import 'package:iltempo/screens/training_detail_screen.dart';
 import 'package:provider/provider.dart';
-import 'screens/menu_dashboard_screen.dart';
 import 'providers/trainings.dart';
 
 void main() => runApp(MyApp());
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           ),
           // If i am authenticated, start at home page, else go to login screen.
           home: authData.isAuth
-              ? MenuDashboardPage()
+              ? HomePage()
               : FutureBuilder(
                   future: authData.tryAutoLogIn(),
                   builder: (context, snapshot) =>

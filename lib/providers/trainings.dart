@@ -59,4 +59,16 @@ class Trainings with ChangeNotifier {
       ),
     ];
   }
+
+  String getUrlOf(String training) {
+    switch(training) {
+      case "Musculacion":
+        return trainings[0].dbUrl;
+      case "Spinning":
+        return trainings[1].dbUrl;
+      case "Zumba":
+        return trainings[2].dbUrl;
+    }
+    return null;
+  }
 }

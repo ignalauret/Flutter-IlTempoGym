@@ -16,7 +16,6 @@ class Auth extends ChangeNotifier {
   Timer _authTimer;
 
   bool get isAuth {
-    print("isAuth?");
     return token != null;
   }
 
@@ -78,7 +77,7 @@ class Auth extends ChangeNotifier {
       _userId = responseData["localId"];
       _expireDate = DateTime.now()
           .add(Duration(seconds: int.parse(responseData["expiresIn"])));
-      fetchUserData();
+      await fetchUserData();
       _autoLogOut();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
@@ -94,6 +93,14 @@ class Auth extends ChangeNotifier {
     } on HttpException catch (error) {
       return error.toString();
     }
+  }
+
+  void printData() {
+    print('token: $_token');
+    print('userId: $_userId,');
+    print('userDni: $_userDni,');
+    print('userName: $_userName,');
+    print('expireDate: $_expireDate.toIso8601String()');
   }
 
   Future<bool> tryAutoLogIn() async {
