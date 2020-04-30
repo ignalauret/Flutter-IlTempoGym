@@ -20,6 +20,7 @@ dependencies:
   http:
   provider:
   intl:
+  shared_preferences:
   flutter:
     sdk: flutter
 
@@ -48,7 +49,7 @@ flutter:
     - assets/img/logo_il_tempo.png
     - assets/img/musculacion.jpg
     - assets/img/musculacion2.jpg
-    - assets/img/spinning.jpg
+    - assets/img/spinning.jpeg
     - assets/img/spinning2.jpg
     - assets/img/zumba.jpg
     - assets/img/zumba2.jpg

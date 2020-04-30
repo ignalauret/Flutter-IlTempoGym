@@ -4,6 +4,7 @@ import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/screens/login_screen.dart';
 import 'package:iltempo/screens/profile_screen.dart';
 import 'package:iltempo/screens/reserve_screeen.dart';
+import 'package:iltempo/screens/splash_screen.dart';
 import 'package:iltempo/screens/training_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'screens/menu_dashboard_screen.dart';
@@ -17,11 +18,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
-        ChangeNotifierProxyProvider<Auth, Turns> (
+        ChangeNotifierProxyProvider<Auth, Turns>(
           create: (ctx) => Turns(null, null),
-          update: (ctx, auth, previousTrainings) => Turns(auth.token, auth.userDni),
+          update: (ctx, auth, previousTrainings) =>
+              Turns(auth.token, auth.userDni),
         ),
-        ChangeNotifierProxyProvider<Auth, Trainings> (
+        ChangeNotifierProxyProvider<Auth, Trainings>(
           create: (ctx) => Trainings(null),
           update: (ctx, auth, previousTrainings) => Trainings(auth.token),
         )
@@ -36,7 +38,15 @@ class MyApp extends StatelessWidget {
             accentColor: const Color(0xffe36e61),
           ),
           // If i am authenticated, start at home page, else go to login screen.
-          home: authData.isAuth ? MenuDashboardPage() : LoginScreen(),
+          home: authData.isAuth
+              ? MenuDashboardPage()
+              : FutureBuilder(
+                  future: authData.tryAutoLogIn(),
+                  builder: (context, snapshot) =>
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? SplashScreen()
+                          : LoginScreen(),
+                ),
           routes: {
             TrainingDetailScreen.routeName: (context) => TrainingDetailScreen(),
             ReserveScreen.routeName: (context) => ReserveScreen(),

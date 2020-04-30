@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildInputText(
-      TextEditingController controller, String hint, TextInputType type) {
+      TextEditingController controller, String hint, bool obscure) {
     return Container(
       height: 45,
       margin: const EdgeInsets.symmetric(
@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         color: CARD_COLOR,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
             padding: const EdgeInsets.only(left: 15),
@@ -58,10 +59,11 @@ class _LoginScreenState extends State<LoginScreen> {
             width: MediaQuery.of(context).size.width * 0.65,
             child: TextField(
               style: TextStyle(color: Colors.white),
-              keyboardType: type,
+              obscureText: obscure,
+              keyboardType: TextInputType.visiblePassword,
               cursorColor: MAIN_COLOR,
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(8),
+                contentPadding: const EdgeInsets.only(left: 8, bottom: 3),
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.transparent),
                 ),
@@ -70,8 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 hintText: "Ingrese su $hint",
                 fillColor: Colors.transparent,
-                filled: true,
-                hintStyle: TextStyle(color: Colors.white70),
+                alignLabelWithHint: true,
+                hintStyle: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 15,
+                ),
               ),
               controller: controller,
             ),
@@ -92,9 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset("assets/img/logo_il_tempo.png"),
-            _buildInputText(_usernameController, "Usuario", TextInputType.text),
-            _buildInputText(_passwordController, "Contraseña",
-                TextInputType.visiblePassword),
+            _buildInputText(_usernameController, "Usuario", false),
+            _buildInputText(_passwordController, "Contraseña", true),
             SizedBox(
               height: 35,
             ),
@@ -106,10 +110,11 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: (_usernameController.text.isEmpty)
                   ? null
                   : () async {
-                      String result = await Provider.of<Auth>(context, listen: false)
-                          .logIn(_usernameController.text,
+                      String result =
+                          await Provider.of<Auth>(context, listen: false).logIn(
+                              _usernameController.text,
                               _passwordController.text);
-                      if(result.isEmpty) return;
+                      if (result.isEmpty) return;
                       var errorMessage =
                           "Lo sentimos hubo un problema, intentelo denuevo mas tarde";
                       if (result.contains("INVALID_PASSWORD")) {

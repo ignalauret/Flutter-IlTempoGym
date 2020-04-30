@@ -65,6 +65,36 @@ class ProfileScreen extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
+                Positioned(
+                  top: 30,
+                  right: 5,
+                  child: FlatButton(
+                    padding: const EdgeInsets.only(left: 0, right: 10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.exit_to_app,
+                          size: 25,
+                          color: MAIN_COLOR,
+                        ),
+                        Text(
+                          "Logout",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                    color: Colors.white70,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    onPressed: () {
+                      authData.logOut();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacementNamed("/");
+                    },
+                  ),
+                ),
               ],
             ),
             InfoCard("Nombre", authData.userName),
