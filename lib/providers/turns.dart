@@ -8,11 +8,19 @@ class Turns extends ChangeNotifier {
 
   final String authToken;
   final String userDni;
+  bool _newTurn;
+
+  set newTurn(bool turn) {
+    _newTurn = turn;
+    notifyListeners();
+  }
 
   List<Turn> _turns = [];
 
   Future<List<Turn>> getUsersTurns(List<String> urls) async {
-    if (_turns.isNotEmpty) return [..._turns];
+    if (_turns.isNotEmpty && !_newTurn) return [..._turns];
+    _turns = [];
+    _newTurn = false;
     for (var url in urls) {
       final response =
           await http.get(url + '&orderBy="dni"&equalTo="$userDni"');

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:iltempo/providers/auth.dart';
+import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
 import 'package:iltempo/widgets/info_card.dart';
@@ -84,7 +85,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
     });
   }
 
-  void createTurn(Training training) {
+  void createTurn(Training training, Turns turnsData) {
     if (counts[selectedHour] >= training.maxSchedules || selectedHour.isEmpty)
       return;
     final url = training.dbUrl;
@@ -101,6 +102,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
         "hora": selectedHour,
       }),
     );
+    turnsData.newTurn = true;
   }
 
   List<Widget> _buildHourSelector(Training training) {
@@ -131,6 +133,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
     final size = MediaQuery.of(context).size;
     training = ModalRoute.of(context).settings.arguments;
     final authData = Provider.of<Auth>(context);
+    final turnsData = Provider.of<Turns>(context);
+
     name = authData.userName;
     dni = authData.userDni;
     _createCountsMap(training);
@@ -277,7 +281,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                           selectedHour.isEmpty)
                       ? null
                       : () {
-                          createTurn(training);
+                          createTurn(training, turnsData);
                           Navigator.pop(context);
                         },
                   textColor: Colors.white,

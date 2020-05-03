@@ -14,8 +14,8 @@ class TurnsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final trainingData = Provider.of<Trainings>(context);
-    final turnsData = Provider.of<Turns>(context);
+    final trainingData = Provider.of<Trainings>(context, listen: false);
+    final turnsData = Provider.of<Turns>(context, listen: true);
     List<String> urls = [];
     trainingData.trainings.forEach((training) => urls.add(training.dbUrl));
 
