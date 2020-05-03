@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iltempo/models/training.dart';
 import '../models/turn.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -37,6 +38,28 @@ class Turns extends ChangeNotifier {
       });
     }
     return [..._turns];
+  }
+
+  void createTurn(
+      {Training training,
+      String dni,
+      String name,
+      String day,
+      String date,
+      String hour}) {
+    final url = training.dbUrl;
+    http.post(
+      url,
+      body: json.encode({
+        "dni": dni,
+        "nombre": name,
+        "clase": training.name,
+        "dia": day,
+        "fecha": date,
+        "hora": hour,
+      }),
+    );
+    newTurn = true;
   }
 
   Future<void> cancelTurn(String id, String training) async {

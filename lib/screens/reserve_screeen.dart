@@ -27,6 +27,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
   Training training;
 
   Map<String, int> counts = {};
+  Map<String, bool> hasReserved = {};
   String selectedHour = "";
   bool _loading = true;
 
@@ -35,7 +36,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
       final response = await http.get(training.dbUrl +
           '&orderBy="fecha"&equalTo="${nextClassDay(training.schedule).day.toString() + "/" + nextClassDay(training.schedule).month.toString()}"');
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      print(extractedData);
       if (counts.keys.length > 0) {
         counts.clear();
         _createCountsMap(training);
@@ -53,7 +53,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
       setState(() {
         extractedData.forEach((key, data) {
           String hour = data["hora"];
+          String turnDni = data["dni"];
           counts[hour]++;
+          if (turnDni == dni) hasReserved[hour] = true;
         });
         _loading = false;
       });
@@ -61,8 +63,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
       throw (error);
     }
   }
-
-
 
   @override
   void initState() {
@@ -81,28 +81,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
       if (schedule.weekday != nextDay.weekday) return;
       if (!counts.containsKey(DateFormat("H:mm").format(schedule))) {
         counts.addAll({DateFormat("H:mm").format(schedule): 0});
+        hasReserved.addAll({DateFormat("H:mm").format(schedule): false});
       }
     });
-  }
-
-  void createTurn(Training training, Turns turnsData) {
-    if (counts[selectedHour] >= training.maxSchedules || selectedHour.isEmpty)
-      return;
-    final url = training.dbUrl;
-    http.post(
-      url,
-      body: json.encode({
-        "dni": dni,
-        "nombre": name,
-        "clase": training.name,
-        "dia": intToDay(nextClassDay(training.schedule).weekday),
-        "fecha": nextClassDay(training.schedule).day.toString() +
-            "/" +
-            nextClassDay(training.schedule).month.toString(),
-        "hora": selectedHour,
-      }),
-    );
-    turnsData.newTurn = true;
   }
 
   List<Widget> _buildHourSelector(Training training) {
@@ -258,9 +239,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
                         child: Text(
                           _loading
                               ? "Cargando..."
-                              : counts[selectedHour] < training.maxSchedules
-                                  ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${training.maxSchedules}"
-                                  : "Lo sentimos, la clase de las $selectedHour está llena",
+                              : hasReserved[selectedHour]
+                                  ? "Usted ya tiene una reserva en esta clase."
+                                  : counts[selectedHour] < training.maxSchedules
+                                      ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${training.maxSchedules}"
+                                      : "Lo sentimos, la clase de las $selectedHour está llena",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -278,10 +261,23 @@ class _ReserveScreenState extends State<ReserveScreen> {
                       horizontal: size.width * 0.25, vertical: 10),
                   onPressed: (_loading ||
                           counts[selectedHour] >= training.maxSchedules ||
-                          selectedHour.isEmpty)
+                          hasReserved[selectedHour])
                       ? null
                       : () {
-                          createTurn(training, turnsData);
+                          turnsData.createTurn(
+                            training: training,
+                            dni: dni,
+                            name: name,
+                            day: intToDay(
+                                nextClassDay(training.schedule).weekday),
+                            date:
+                                nextClassDay(training.schedule).day.toString() +
+                                    "/" +
+                                    nextClassDay(training.schedule)
+                                        .month
+                                        .toString(),
+                            hour: selectedHour,
+                          );
                           Navigator.pop(context);
                         },
                   textColor: Colors.white,
