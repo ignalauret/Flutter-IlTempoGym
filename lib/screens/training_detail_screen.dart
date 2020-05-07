@@ -17,6 +17,7 @@ class TrainingDetailScreen extends StatelessWidget {
     final Training training = ModalRoute.of(context).settings.arguments;
 
     final descriptions = training.description.split(("."));
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Container(
@@ -120,19 +121,24 @@ class TrainingDetailScreen extends StatelessWidget {
               ],
             ),
             Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.14,
-              margin: const EdgeInsets.only(
+              width: size.width,
+              height: size.height * 0.15,
+              margin: EdgeInsets.only(
                 left: 0,
                 right: 0,
                 top: 0,
-                bottom: 5,
+                bottom: size.height * 0.006,
               ),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => ScheduleCard(
-                    day: days[index],
-                    hours: hoursOfDay(training.schedule, days[index])),
+                  day: days[index],
+                  hours: hoursOfDay(
+                    training.schedule,
+                    days[index],
+                  ),
+                  size: size,
+                ),
                 itemCount: 5,
               ),
             ),
@@ -140,7 +146,7 @@ class TrainingDetailScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.005),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: descriptions
@@ -155,7 +161,6 @@ class TrainingDetailScreen extends StatelessWidget {
                                 fontSize: 15,
                               ),
                             ),
-
                             SizedBox(
                               width: 5,
                             ),
@@ -174,8 +179,7 @@ class TrainingDetailScreen extends StatelessWidget {
             FlatButton(
               child: Text("Sacar Turno"),
               padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.25,
-                  vertical: 10),
+                  horizontal: size.width * 0.25, vertical: 10),
               onPressed: () {
                 Navigator.pushNamed(
                   context,

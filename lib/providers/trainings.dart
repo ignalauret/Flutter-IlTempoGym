@@ -33,9 +33,9 @@ class Trainings with ChangeNotifier {
         imageUrl: "assets/img/zumba.jpg",
         bannerUrl: "assets/img/zumba2.jpg",
         schedule: [
-          DateTime(2020, 4, 27, 9, 30),
-          DateTime(2020, 4, 27, 17, 00),
-          DateTime(2020, 4, 29, 17, 00)
+          DateTime(2020, 4, 28, 9, 30),
+          DateTime(2020, 4, 28, 17, 00),
+          DateTime(2020, 4, 30, 17, 00)
         ],
         dbUrl:
             "https://il-tempo-dda8e.firebaseio.com/zumba.json?auth=$authToken",
@@ -49,9 +49,9 @@ class Trainings with ChangeNotifier {
         imageUrl: "assets/img/spinning.jpeg",
         bannerUrl: "assets/img/spinning2.jpg",
         schedule: [
-          DateTime(2020, 4, 27, 9, 30),
+          DateTime(2020, 4, 27, 17, 30),
           DateTime(2020, 4, 27, 18, 30),
-          DateTime(2020, 4, 29, 18, 30)
+          DateTime(2020, 4, 31, 18, 30)
         ],
         dbUrl:
             "https://il-tempo-dda8e.firebaseio.com/spinning.json?auth=$authToken",

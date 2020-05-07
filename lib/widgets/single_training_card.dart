@@ -5,8 +5,9 @@ import 'package:iltempo/screens/training_detail_screen.dart';
 import 'package:iltempo/utils/constants.dart';
 
 class SingleTrainingCard extends StatelessWidget {
-  SingleTrainingCard(this.training);
+  SingleTrainingCard(this.training, this.size);
   final Training training;
+  final Size size;
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +19,8 @@ class SingleTrainingCard extends StatelessWidget {
       child: Card(
         color: Colors.black,
         margin: EdgeInsets.symmetric(
-          vertical: 15,
-          horizontal: 10,
+          vertical: size.height * 0.01,
+          horizontal: size.width * 0.01,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -37,29 +38,38 @@ class SingleTrainingCard extends StatelessWidget {
               ),
             ),
             Positioned(
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    training.name,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                    ),
+              child: Container(
+                width: size.width * 0.6,
+                alignment: Alignment.centerLeft,
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        training.name,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        training.teacher,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: const Color(0xff9a9491),
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    training.teacher,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: const Color(0xff9a9491),
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
+                ),
               ),
-              bottom: 20,
-              left: 15,
+              bottom: size.height * 0.03,
+              left: size.width * 0.03,
             ),
             Positioned(
               child: FlatButton(
@@ -77,8 +87,8 @@ class SingleTrainingCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              bottom: 11,
-              right: 15,
+              bottom: size.height * 0.015,
+              right: size.width * 0.02,
             ),
           ],
         ),

@@ -3,12 +3,14 @@ import 'package:flutter/rendering.dart';
 import 'package:iltempo/utils/constants.dart';
 
 class ScheduleCard extends StatelessWidget {
-  ScheduleCard({this.day, this.hours});
+  ScheduleCard({this.day, this.hours, this.size});
 
   final String day;
   final List<String> hours;
+  final Size size;
 
   List<Widget> _buildBody(BuildContext context) {
+    List<Widget> hoursWidgets = [];
     List<Widget> body = [
       Text(
         day,
@@ -18,20 +20,21 @@ class ScheduleCard extends StatelessWidget {
         ),
       ),
     ];
-    if(hours.isEmpty || hours.length < 2)
-      body.add(SizedBox(height: MediaQuery.of(context).size.height * 0.020,));
-    else body.add(SizedBox(height: MediaQuery.of(context).size.height * 0.012,));
     if (hours.isEmpty)
-      body.add(
-        Text(
-          "-",
-          style: TextStyle(
-            color: Colors.white,
+      hoursWidgets.add(
+        FittedBox(
+          alignment: Alignment.center,
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "-",
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
       );
     else
-      body.addAll(
+      hoursWidgets.addAll(
         hours
             .map((h) => Text(
                   h,
@@ -41,6 +44,18 @@ class ScheduleCard extends StatelessWidget {
                 ))
             .toList(),
       );
+
+    body.add(
+      Expanded(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            children: hoursWidgets,
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
+        ),
+      ),
+    );
     return body;
   }
 
@@ -49,7 +64,11 @@ class ScheduleCard extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return Container(
       margin: EdgeInsets.all(width * 0.025),
-      padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 15),
+      padding: EdgeInsets.only(
+          left: size.height * 0.006,
+          right: size.height * 0.006,
+          top: size.height * 0.006,
+          bottom: size.height * 0.015),
       width: width * 0.15,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),

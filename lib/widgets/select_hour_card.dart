@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:iltempo/utils/constants.dart';
 
-class SelectDayCard extends StatelessWidget {
-  SelectDayCard(this.day, this.selected, this.onTap);
+class SelectHourCard extends StatelessWidget {
+  SelectHourCard(this.day, this.selected, this.onTap, this.size);
   final String day;
   final bool selected;
   final Function onTap;
+  final Size size;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +26,17 @@ class SelectDayCard extends StatelessWidget {
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            day,
-            style: TextStyle(color: selected ? Colors.black : MAIN_COLOR),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.005),
+          width: size.width * 0.15,
+          height: size.height * 0.05,
+          child: FittedBox(
+            alignment: Alignment.center,
+            fit: BoxFit.scaleDown,
+            child: Text(
+              day,
+              style: TextStyle(color: selected ? Colors.black : MAIN_COLOR),
+            ),
           ),
         ),
       ),

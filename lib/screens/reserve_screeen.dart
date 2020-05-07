@@ -8,7 +8,7 @@ import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
 import 'package:iltempo/widgets/info_card.dart';
-import 'package:iltempo/widgets/select_day_card.dart';
+import 'package:iltempo/widgets/select_hour_card.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/training.dart';
@@ -86,6 +86,46 @@ class _ReserveScreenState extends State<ReserveScreen> {
     });
   }
 
+  void showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: CARD_COLOR,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        contentPadding: const EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+          bottom: 0,
+        ),
+        titlePadding: const EdgeInsets.only(
+          top: 20,
+          bottom: 0,
+          left: 20,
+          right: 20,
+        ),
+        title: Icon(
+          Icons.check,
+          size: 45,
+          color: Colors.green,
+        ),
+        content: Text(
+          "Turno reservado para ${training.name} el dia ${nextClassDay(training.schedule).day.toString() + "/" + nextClassDay(training.schedule).month.toString()} a las $selectedHour",
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              "Ok",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () => Navigator.of(ctx).pop(),
+          )
+        ],
+      ),
+    ).then((_) => Navigator.of(context).pop());
+  }
+
   List<Widget> _buildHourSelector(Training training) {
     final DateTime nextDay = nextClassDay(training.schedule);
     if (selectedHour.isEmpty)
@@ -96,8 +136,12 @@ class _ReserveScreenState extends State<ReserveScreen> {
         .where((schedule) => schedule.weekday == nextDay.weekday)
         .forEach(
           (schedule) => result.add(
-            SelectDayCard(DateFormat("H:mm").format(schedule),
-                selectedHour == DateFormat("H:mm").format(schedule), onHourTap),
+            SelectHourCard(
+              DateFormat("H:mm").format(schedule),
+              selectedHour == DateFormat("H:mm").format(schedule),
+              onHourTap,
+              MediaQuery.of(context).size,
+            ),
           ),
         );
     return result;
@@ -131,7 +175,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
           physics: AlwaysScrollableScrollPhysics(),
           child: Container(
             height: size.height,
-            padding: const EdgeInsets.only(bottom: 15),
+            padding: EdgeInsets.only(bottom: size.height * 0.02),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -141,7 +185,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
                       Stack(
                         children: <Widget>[
                           Container(
-                            margin: const EdgeInsets.all(10),
                             height: size.height * 0.3,
                             width: double.infinity,
                             child: Image.asset(
@@ -149,11 +192,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
                             ),
                           ),
                           Positioned(
-                            top: 30,
-                            left: 5,
+                            top: size.height * 0.035,
+                            left: size.width * 0.02,
                             child: FlatButton(
-                              padding:
-                                  const EdgeInsets.only(left: 0, right: 10),
+                              padding: EdgeInsets.only(
+                                  left: 0, right: size.width * 0.05),
                               child: Row(
                                 children: <Widget>[
                                   Icon(
@@ -207,23 +250,23 @@ class _ReserveScreenState extends State<ReserveScreen> {
                               ? "Cargando..."
                               : formatDate(nextClassDay(training.schedule))),
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 15,
-                          vertical: 5,
+                          vertical: size.height * 0.007,
                         ),
                         width: size.width,
                         height: size.height * 0.12,
                         child: Column(
                           children: <Widget>[
                             Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Elige un horario",
-                                  textAlign: TextAlign.start,
-                                  style: TITLE_STYLE,
-                                )),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Elige un horario",
+                                style: TITLE_STYLE,
+                              ),
+                            ),
                             SizedBox(
-                              height: 5,
+                              height: size.height * 0.005,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -240,7 +283,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                           _loading
                               ? "Cargando..."
                               : hasReserved[selectedHour]
-                                  ? "Usted ya tiene una reserva en esta clase."
+                                  ? "Usted ya tiene una reserva para esta clase."
                                   : counts[selectedHour] < training.maxSchedules
                                       ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${training.maxSchedules}"
                                       : "Lo sentimos, la clase de las $selectedHour está llena",
@@ -278,7 +321,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                         .toString(),
                             hour: selectedHour,
                           );
-                          Navigator.pop(context);
+                          showSuccessDialog(context);
                         },
                   textColor: Colors.white,
                   color: MAIN_COLOR,

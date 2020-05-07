@@ -8,10 +8,10 @@ class TrainingsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return ListView.builder(
-      itemBuilder: (ctx, index) => SingleTrainingCard(trainings[index]),
+      itemBuilder: (ctx, index) => SingleTrainingCard(trainings[index], size),
       itemCount: trainings.length,
-
     );
   }
 }
