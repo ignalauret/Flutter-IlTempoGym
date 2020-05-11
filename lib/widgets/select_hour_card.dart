@@ -14,7 +14,7 @@ class SelectHourCard extends StatelessWidget {
     return Card(
       color: selected ? MAIN_COLOR : Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(BORDER_RADIUS),
         side: BorderSide(
           color: MAIN_COLOR,
           width: 2,
@@ -24,7 +24,7 @@ class SelectHourCard extends StatelessWidget {
         onTap: () => onTap(day),
         splashColor: MAIN_COLOR,
         customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(BORDER_RADIUS),
         ),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.005),

@@ -9,6 +9,7 @@ class Training {
   final List<DateTime> schedule;
   final String dbUrl;
   final int maxSchedules;
+  final String duration;
 
   Training({
     @required this.name,
@@ -19,5 +20,6 @@ class Training {
     @required this.dbUrl,
     @required this.maxSchedules,
     @required this.bannerUrl,
+    @required this.duration,
   });
 }

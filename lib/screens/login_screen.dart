@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (ctx) => AlertDialog(
               backgroundColor: CARD_COLOR,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
+                  borderRadius: BorderRadius.circular(BORDER_RADIUS)),
               contentPadding: const EdgeInsets.only(
                 top: 20,
                 left: 20,
@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(BORDER_RADIUS),
         color: CARD_COLOR,
       ),
       child: Row(
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textColor: Colors.white,
               color: MAIN_COLOR,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(BORDER_RADIUS),
               ),
               disabledColor: Colors.grey,
             ),

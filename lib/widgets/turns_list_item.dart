@@ -16,7 +16,7 @@ class TurnsListItem extends StatelessWidget {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(BORDER_RADIUS),
         color: CARD_COLOR,
       ),
       child: Row(

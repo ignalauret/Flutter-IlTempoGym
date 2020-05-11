@@ -10,7 +10,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authData = Provider.of<Auth>(context);
-    print("Auth Data:");
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -61,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     color: Colors.white70,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),

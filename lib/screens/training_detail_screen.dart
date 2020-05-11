@@ -32,8 +32,8 @@ class TrainingDetailScreen extends StatelessWidget {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(25),
-                      bottomLeft: Radius.circular(25)),
+                      bottomRight: Radius.circular(BORDER_RADIUS),
+                      bottomLeft: Radius.circular(BORDER_RADIUS)),
                   child: Image.asset(
                     training.bannerUrl,
                   ),
@@ -70,7 +70,7 @@ class TrainingDetailScreen extends StatelessWidget {
                     ),
                     color: Colors.white70,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
@@ -109,7 +109,7 @@ class TrainingDetailScreen extends StatelessWidget {
                         width: 5,
                       ),
                       Text(
-                        "Duración: 1 hora",
+                        "Duración: ${training.duration}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
@@ -190,7 +190,7 @@ class TrainingDetailScreen extends StatelessWidget {
               textColor: Colors.white,
               color: MAIN_COLOR,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(BORDER_RADIUS),
                 side: BorderSide(
                   color: MAIN_COLOR,
                   width: 2,

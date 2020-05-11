@@ -12,15 +12,21 @@ class TurnsList extends StatelessWidget {
   TurnsList(this.dni);
   final String dni;
 
+  Future<List<Turn>> getUserTurns(
+      Turns turnsData, Trainings trainingsData) async {
+    List<String> urls = [];
+    final trainings = await trainingsData.fetchTrainings();
+    trainings.forEach((training) => urls.add(training.dbUrl));
+    return turnsData.getUsersTurns(urls);
+  }
+
   @override
   Widget build(BuildContext context) {
     final trainingData = Provider.of<Trainings>(context, listen: false);
     final turnsData = Provider.of<Turns>(context, listen: true);
-    List<String> urls = [];
-    trainingData.trainings.forEach((training) => urls.add(training.dbUrl));
 
     return FutureBuilder<List<Turn>>(
-      future: turnsData.getUsersTurns(urls),
+      future: getUserTurns(turnsData, trainingData),
       builder: (context, snapshot) {
         if (snapshot.data != null) {
           if (snapshot.hasData) {
@@ -59,7 +65,8 @@ class TurnsList extends StatelessWidget {
                                   context: context,
                                   color: Colors.black,
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
+                                      borderRadius:
+                                          BorderRadius.circular(BORDER_RADIUS)),
                                   position: RelativeRect.fromLTRB(
                                       position.global.dx,
                                       position.global.dy,
@@ -87,7 +94,8 @@ class TurnsList extends StatelessWidget {
                                             backgroundColor: CARD_COLOR,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(15)),
+                                                    BorderRadius.circular(
+                                                        BORDER_RADIUS)),
                                             contentPadding:
                                                 const EdgeInsets.only(
                                               top: 20,
@@ -155,7 +163,7 @@ class TurnsList extends StatelessWidget {
         }
         return new Container(
           alignment: AlignmentDirectional.center,
-          child: new CircularProgressIndicator(),
+          child: CircularProgressIndicator(),
         );
       },
     );

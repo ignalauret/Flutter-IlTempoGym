@@ -23,13 +23,13 @@ class SingleTrainingCard extends StatelessWidget {
           horizontal: size.width * 0.01,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(BORDER_RADIUS),
         ),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
             ClipRRect(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(BORDER_RADIUS),
               child: Image.asset(
                 training.imageUrl,
                 alignment: Alignment.center,
@@ -84,7 +84,7 @@ class SingleTrainingCard extends StatelessWidget {
                 textColor: Colors.white,
                 color: MAIN_COLOR,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(BORDER_RADIUS),
                 ),
               ),
               bottom: size.height * 0.015,

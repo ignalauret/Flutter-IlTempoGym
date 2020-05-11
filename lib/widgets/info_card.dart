@@ -14,7 +14,7 @@ class InfoCard extends StatelessWidget {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(BORDER_RADIUS),
         color: CARD_COLOR,
       ),
       child: Row(
@@ -36,7 +36,7 @@ class InfoCard extends StatelessWidget {
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.7,
-            padding: const EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.only(left: 8, right: 8),
             child: FittedBox(
               alignment: Alignment.centerLeft,
               fit: BoxFit.scaleDown,

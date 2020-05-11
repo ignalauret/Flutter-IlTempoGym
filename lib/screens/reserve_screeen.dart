@@ -91,7 +91,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: CARD_COLOR,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(BORDER_RADIUS)),
         contentPadding: const EdgeInsets.only(
           top: 20,
           left: 20,
@@ -213,7 +213,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                               ),
                               color: Colors.white70,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(BORDER_RADIUS),
                               ),
                               onPressed: () => Navigator.of(context).pop(),
                             ),
@@ -326,7 +326,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                   textColor: Colors.white,
                   color: MAIN_COLOR,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(BORDER_RADIUS),
                   ),
                   disabledColor: Colors.grey,
                 ),

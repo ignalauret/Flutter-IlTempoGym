@@ -61,17 +61,16 @@ class ScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Container(
-      margin: EdgeInsets.all(width * 0.025),
+      margin: EdgeInsets.all(size.width * 0.025),
       padding: EdgeInsets.only(
           left: size.height * 0.006,
           right: size.height * 0.006,
           top: size.height * 0.006,
           bottom: size.height * 0.015),
-      width: width * 0.15,
+      width: size.width * 0.15,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(BORDER_RADIUS),
         color: Colors.transparent,
         border: Border.all(
           color: MAIN_COLOR,
