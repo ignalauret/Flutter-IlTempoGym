@@ -6,7 +6,6 @@ import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
 import 'package:iltempo/widgets/info_card.dart';
 import 'package:iltempo/widgets/schedule_card.dart';
-import 'package:provider/provider.dart';
 
 class TrainingDetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";

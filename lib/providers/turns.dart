@@ -63,19 +63,22 @@ class Turns extends ChangeNotifier {
   }
 
   Future<void> cancelTurn(String id, String training) async {
-    var response;
     switch (training) {
       case "Musculacion":
-        response = await http.delete(
+        http.delete(
             "https://il-tempo-dda8e.firebaseio.com/musculacion/$id.json?auth=$authToken");
         break;
       case "Spinning":
-        response = await http.delete(
+        http.delete(
             "https://il-tempo-dda8e.firebaseio.com/spinning/$id.json?auth=$authToken");
         break;
       case "Zumba":
-        response = await http.delete(
+        http.delete(
             "https://il-tempo-dda8e.firebaseio.com/zumba/$id.json?auth=$authToken");
+        break;
+      case "Yoga":
+        http.delete(
+            "https://il-tempo-dda8e.firebaseio.com/yoga/$id.json?auth=$authToken");
         break;
     }
     _turns.removeWhere((turn) => turn.id == id);

@@ -43,6 +43,6 @@ class Trainings with ChangeNotifier {
         );
       },
     );
-    return [_trainings[0], _trainings[2], _trainings[1]];
+    return [..._trainings];
   }
 }

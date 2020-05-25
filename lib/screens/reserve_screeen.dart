@@ -36,6 +36,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
       final response = await http.get(training.dbUrl +
           '&orderBy="fecha"&equalTo="${nextClassDay(training.schedule).day.toString() + "/" + nextClassDay(training.schedule).month.toString()}"');
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      print(extractedData);
       if (counts.keys.length > 0) {
         counts.clear();
         _createCountsMap(training);
