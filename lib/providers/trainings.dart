@@ -18,7 +18,6 @@ class Trainings with ChangeNotifier {
     final trainings = json.decode(response.body) as Map<String, dynamic>;
     trainings.forEach(
       (name, data) {
-        print(name);
         _trainings.add(
           Training(
             name: name,
@@ -28,13 +27,32 @@ class Trainings with ChangeNotifier {
             bannerUrl: data["bannerUrl"],
             schedule: (data["horario"] as List).map((schedule) {
               List<String> date = schedule.toString().split(".");
-              return DateTime(
-                2020,
-                int.parse(date[0]),
-                int.parse(date[1]),
-                int.parse(date[2]),
-                int.parse(date[3]),
-              );
+              final List<DateTime> result = [];
+              if (schedule.toString().contains("a")) {
+                List<String> dates = schedule.toString().split("a");
+                dates.forEach((date) {
+                  final splitDate = date.split(".");
+                  result.add(
+                    DateTime(
+                      2020,
+                      int.parse(splitDate[0]),
+                      int.parse(splitDate[1]),
+                      int.parse(splitDate[2]),
+                      int.parse(splitDate[3]),
+                    ),
+                  );
+                });
+              } else
+                result.add(
+                  DateTime(
+                    2020,
+                    int.parse(date[0]),
+                    int.parse(date[1]),
+                    int.parse(date[2]),
+                    int.parse(date[3]),
+                  ),
+                );
+              return result;
             }).toList(),
             dbUrl: data["dbUrl"] + "?auth=$authToken",
             maxSchedules: data["maxSchedules"],

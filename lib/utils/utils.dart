@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 bool compareHours(DateTime d1, DateTime d2) {
   if (d1.hour > d2.hour) return false;
   if (d1.hour == d2.hour && d1.minute > d2.minute) return false;
-  if (d1.hour == d2.hour && d1.minute == d2.minute && d1.second > d2.second) return false;
+  if (d1.hour == d2.hour && d1.minute == d2.minute && d1.second > d2.second)
+    return false;
   return true;
 }
 
@@ -13,7 +14,7 @@ DateTime nextClassDay(List<DateTime> possibleDays) {
     for (DateTime day in possibleDays) {
       if (day.weekday == DateTime.now().add(Duration(days: i)).weekday) {
         if (i != 0 || compareHours(DateTime.now(), day))
-        return DateTime.now().add(Duration(days: i));
+          return DateTime.now().add(Duration(days: i));
       }
     }
   }
@@ -56,11 +57,17 @@ String intToDay(int weekday) {
   return "Lun";
 }
 
-List<String> hoursOfDay(List<DateTime> schedules, String day) {
+List<String> hoursOfDay(List<List<DateTime>> schedules, String day) {
   List<String> hours = [];
   schedules.forEach((schedule) {
-    if (schedule.weekday == dayToInt(day))
-      hours.add(DateFormat("H:mm").format(schedule));
+    if (schedule[0].weekday == dayToInt(day)) {
+      if (schedule.length == 1) {
+        hours.add(DateFormat("H:mm").format(schedule[0]));
+      } else {
+        hours.add(DateFormat("H:mm").format(schedule[0]) + " a");
+        hours.add(DateFormat("H:mm").format(schedule[1]));
+      }
+    }
   });
   return hours;
 }

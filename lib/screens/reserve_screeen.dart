@@ -30,13 +30,13 @@ class _ReserveScreenState extends State<ReserveScreen> {
   Map<String, bool> hasReserved = {};
   String selectedHour = "";
   bool _loading = true;
+  List<DateTime> parsedSchedule = [];
 
   Future<void> fetchTrainings(Training training) async {
     try {
       final response = await http.get(training.dbUrl +
-          '&orderBy="fecha"&equalTo="${nextClassDay(training.schedule).day.toString() + "/" + nextClassDay(training.schedule).month.toString()}"');
+          '&orderBy="fecha"&equalTo="${nextClassDay(parsedSchedule).day.toString() + "/" + nextClassDay(parsedSchedule).month.toString()}"');
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      print(extractedData);
       if (counts.keys.length > 0) {
         counts.clear();
         _createCountsMap(training);
@@ -69,6 +69,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
   void initState() {
     Future.delayed(Duration.zero).then((_) {
       training = ModalRoute.of(context).settings.arguments;
+      parsedSchedule = training.getParsedSchedule();
       _createCountsMap(training);
       fetchTrainings(training);
     });
@@ -77,8 +78,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
   void _createCountsMap(Training training) {
     if (counts.keys.length > 0) return;
-    final DateTime nextDay = nextClassDay(training.schedule);
-    training.schedule.forEach((schedule) {
+    final DateTime nextDay = nextClassDay(parsedSchedule);
+    parsedSchedule.forEach((schedule) {
       if (schedule.weekday != nextDay.weekday) return;
       if (!counts.containsKey(DateFormat("H:mm").format(schedule))) {
         counts.addAll({DateFormat("H:mm").format(schedule): 0});
@@ -92,7 +93,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: CARD_COLOR,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(BORDER_RADIUS)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(BORDER_RADIUS)),
         contentPadding: const EdgeInsets.only(
           top: 20,
           left: 20,
@@ -111,7 +113,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
           color: Colors.green,
         ),
         content: Text(
-          "Turno reservado para ${training.name} el dia ${nextClassDay(training.schedule).day.toString() + "/" + nextClassDay(training.schedule).month.toString()} a las $selectedHour",
+          "Turno reservado para ${training.name} el dia ${nextClassDay(parsedSchedule).day.toString() + "/" + nextClassDay(parsedSchedule).month.toString()} a las $selectedHour",
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
@@ -128,12 +130,12 @@ class _ReserveScreenState extends State<ReserveScreen> {
   }
 
   List<Widget> _buildHourSelector(Training training) {
-    final DateTime nextDay = nextClassDay(training.schedule);
+    final DateTime nextDay = nextClassDay(parsedSchedule);
     if (selectedHour.isEmpty)
-      selectedHour = DateFormat("H:mm").format(training.schedule
+      selectedHour = DateFormat("H:mm").format(parsedSchedule
           .firstWhere((schedule) => schedule.weekday == nextDay.weekday));
     List<Widget> result = [];
-    training.schedule
+    parsedSchedule
         .where((schedule) => schedule.weekday == nextDay.weekday)
         .forEach(
           (schedule) => result.add(
@@ -214,7 +216,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
                               ),
                               color: Colors.white70,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                                borderRadius:
+                                    BorderRadius.circular(BORDER_RADIUS),
                               ),
                               onPressed: () => Navigator.of(context).pop(),
                             ),
@@ -249,7 +252,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                           "Dia",
                           counts.isEmpty
                               ? "Cargando..."
-                              : formatDate(nextClassDay(training.schedule))),
+                              : formatDate(nextClassDay(parsedSchedule))),
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 15,
@@ -312,14 +315,10 @@ class _ReserveScreenState extends State<ReserveScreen> {
                             training: training,
                             dni: dni,
                             name: name,
-                            day: intToDay(
-                                nextClassDay(training.schedule).weekday),
-                            date:
-                                nextClassDay(training.schedule).day.toString() +
-                                    "/" +
-                                    nextClassDay(training.schedule)
-                                        .month
-                                        .toString(),
+                            day: intToDay(nextClassDay(parsedSchedule).weekday),
+                            date: nextClassDay(parsedSchedule).day.toString() +
+                                "/" +
+                                nextClassDay(parsedSchedule).month.toString(),
                             hour: selectedHour,
                           );
                           showSuccessDialog(context);
