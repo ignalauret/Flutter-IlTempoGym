@@ -25,7 +25,8 @@ class Turns extends ChangeNotifier {
     for (var url in urls) {
       final response =
           await http.get(url + '&orderBy="dni"&equalTo="$userDni"');
-      if (response == null) break;
+      print(response);
+      if (response == null) continue;
       final turns = json.decode(response.body) as Map<String, dynamic>;
       turns.forEach((id, data) {
         Turn turn = Turn(

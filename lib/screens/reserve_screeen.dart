@@ -131,7 +131,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
   List<Widget> _buildHourSelector(Training training) {
     final DateTime nextDay = nextClassDay(parsedSchedule);
-    if (selectedHour.isEmpty)
+    if (selectedHour.isEmpty && parsedSchedule.isNotEmpty)
       selectedHour = DateFormat("H:mm").format(parsedSchedule
           .firstWhere((schedule) => schedule.weekday == nextDay.weekday));
     List<Widget> result = [];
@@ -139,11 +139,15 @@ class _ReserveScreenState extends State<ReserveScreen> {
         .where((schedule) => schedule.weekday == nextDay.weekday)
         .forEach(
           (schedule) => result.add(
-            SelectHourCard(
-              DateFormat("H:mm").format(schedule),
-              selectedHour == DateFormat("H:mm").format(schedule),
-              onHourTap,
-              MediaQuery.of(context).size,
+            Container(
+              height: 30,
+              width: 120,
+              child: SelectHourCard(
+                DateFormat("H:mm").format(schedule),
+                selectedHour == DateFormat("H:mm").format(schedule),
+                onHourTap,
+                MediaQuery.of(context).size,
+              ),
             ),
           ),
         );
@@ -165,7 +169,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
 
     name = authData.userName;
     dni = authData.userDni;
-    _createCountsMap(training);
+    //_createCountsMap(training);
     return Scaffold(
       backgroundColor: Colors.black,
       body: RefreshIndicator(
@@ -174,57 +178,62 @@ class _ReserveScreenState extends State<ReserveScreen> {
         },
         color: MAIN_COLOR,
         backgroundColor: Colors.white70,
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: Container(
-            height: size.height,
-            padding: EdgeInsets.only(bottom: size.height * 0.02),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: size.height - 65,
+              width: size.width,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  padding: EdgeInsets.only(bottom: size.height * 0.02),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Stack(
-                        children: <Widget>[
-                          Container(
-                            height: size.height * 0.3,
-                            width: double.infinity,
-                            child: Image.asset(
-                              "assets/img/logo_il_tempo.png",
-                            ),
-                          ),
-                          Positioned(
-                            top: size.height * 0.035,
-                            left: size.width * 0.02,
-                            child: FlatButton(
-                              padding: EdgeInsets.only(
-                                  left: 0, right: size.width * 0.05),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.chevron_left,
-                                    size: 25,
-                                    color: MAIN_COLOR,
+                      Container(
+                        child: Column(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Container(
+                                  height: size.height * 0.3,
+                                  width: double.infinity,
+                                  child: Image.asset(
+                                    "assets/img/logo_il_tempo.png",
                                   ),
-                                  Text(
-                                    "Volver",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 15),
+                                ),
+                                Positioned(
+                                  top: size.height * 0.035,
+                                  left: size.width * 0.02,
+                                  child: FlatButton(
+                                    padding: EdgeInsets.only(
+                                        left: 0, right: size.width * 0.05),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.chevron_left,
+                                          size: 25,
+                                          color: MAIN_COLOR,
+                                        ),
+                                        Text(
+                                          "Volver",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                      ],
+                                    ),
+                                    color: Colors.white70,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(BORDER_RADIUS),
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
                                   ),
-                                ],
-                              ),
-                              color: Colors.white70,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(BORDER_RADIUS),
-                              ),
-                              onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      InfoCard("Actividad", training.name),
+                            InfoCard("Actividad", training.name),
 //                Container(
 //                  padding: const EdgeInsets.symmetric(
 //                    horizontal: 15,
@@ -248,91 +257,113 @@ class _ReserveScreenState extends State<ReserveScreen> {
 //                    ],
 //                  ),
 //                ),
-                      InfoCard(
-                          "Dia",
-                          counts.isEmpty
-                              ? "Cargando..."
-                              : formatDate(nextClassDay(parsedSchedule))),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: size.height * 0.007,
-                        ),
-                        width: size.width,
-                        height: size.height * 0.12,
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Elige un horario",
-                                style: TITLE_STYLE,
+                            InfoCard(
+                                "Dia",
+                                counts.isEmpty
+                                    ? "Cargando..."
+                                    : formatDate(nextClassDay(parsedSchedule))),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: size.height * 0.007,
+                              ),
+                              width: size.width,
+                              child: Column(
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Elige un horario",
+                                      style: TITLE_STYLE,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    width: size.width,
+                                    child: GridView(
+                                      gridDelegate:
+                                          SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 80,
+                                        childAspectRatio: 3 / 2,
+                                        mainAxisSpacing: 0,
+                                        crossAxisSpacing: 5,
+                                      ),
+                                      padding: const EdgeInsets.all(0),
+                                      shrinkWrap: true,
+                                      children: _buildHourSelector(training),
+                                      scrollDirection: Axis.vertical,
+                                      physics: NeverScrollableScrollPhysics(),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              height: size.height * 0.005,
+                            Container(
+                              margin: const EdgeInsets.only(
+                                bottom: 10,
+                              ),
+                              child: Text(
+                                _loading
+                                    ? "Cargando..."
+                                    : hasReserved[selectedHour]
+                                        ? "Usted ya tiene una reserva para esta clase."
+                                        : counts[selectedHour] <
+                                                training.maxSchedules
+                                            ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${training.maxSchedules}"
+                                            : "Lo sentimos, la clase de las $selectedHour está llena",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: _buildHourSelector(training),
-                            ),
+                            InfoCard("Nombre", name),
+                            InfoCard("Dni", dni),
                           ],
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                          bottom: 10,
-                        ),
-                        child: Text(
-                          _loading
-                              ? "Cargando..."
-                              : hasReserved[selectedHour]
-                                  ? "Usted ya tiene una reserva para esta clase."
-                                  : counts[selectedHour] < training.maxSchedules
-                                      ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${training.maxSchedules}"
-                                      : "Lo sentimos, la clase de las $selectedHour está llena",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                      InfoCard("Nombre", name),
-                      InfoCard("Dni", dni),
                     ],
                   ),
                 ),
-                FlatButton(
-                  child: Text("Sacar Turno"),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.25, vertical: 10),
-                  onPressed: (_loading ||
-                          counts[selectedHour] >= training.maxSchedules ||
-                          hasReserved[selectedHour])
-                      ? null
-                      : () {
-                          turnsData.createTurn(
-                            training: training,
-                            dni: dni,
-                            name: name,
-                            day: intToDay(nextClassDay(parsedSchedule).weekday),
-                            date: nextClassDay(parsedSchedule).day.toString() +
-                                "/" +
-                                nextClassDay(parsedSchedule).month.toString(),
-                            hour: selectedHour,
-                          );
-                          showSuccessDialog(context);
-                        },
-                  textColor: Colors.white,
-                  color: MAIN_COLOR,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(BORDER_RADIUS),
-                  ),
-                  disabledColor: Colors.grey,
-                ),
-              ],
+              ),
             ),
-          ),
+            Container(
+              height: 65,
+              width: size.width,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 40,
+                vertical: 10,
+              ),
+              child: FlatButton(
+                child: Text("Sacar Turno"),
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.25, vertical: 10),
+                onPressed: (_loading ||
+                        counts[selectedHour] >= training.maxSchedules ||
+                        hasReserved[selectedHour])
+                    ? null
+                    : () {
+                        turnsData.createTurn(
+                          training: training,
+                          dni: dni,
+                          name: name,
+                          day: intToDay(nextClassDay(parsedSchedule).weekday),
+                          date: nextClassDay(parsedSchedule).day.toString() +
+                              "/" +
+                              nextClassDay(parsedSchedule).month.toString(),
+                          hour: selectedHour,
+                        );
+                        showSuccessDialog(context);
+                      },
+                textColor: Colors.white,
+                color: MAIN_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                ),
+                disabledColor: Colors.grey,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -24,7 +24,6 @@ class Training {
   });
 
   List<DateTime> getParsedSchedule() {
-    print(schedule);
     final List<DateTime> result = [];
     schedule.forEach(
       (listDates) {

@@ -35,6 +35,8 @@ class TrainingDetailScreen extends StatelessWidget {
                       bottomLeft: Radius.circular(BORDER_RADIUS)),
                   child: Image.asset(
                     training.bannerUrl,
+                    color: Colors.black38,
+                    colorBlendMode: BlendMode.darken,
                   ),
                 ),
                 Positioned(

@@ -56,6 +56,8 @@ flutter:
     - assets/img/zumba_banner.jpg
     - assets/img/yoga_card.jpg
     - assets/img/yoga_banner.jpg
+    - assets/img/funcional_card.jpg
+    - assets/img/funcional_banner.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
