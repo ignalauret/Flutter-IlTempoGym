@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:http/http.dart' as http;
 import 'package:iltempo/providers/auth.dart';
 import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/utils/constants.dart';
@@ -32,46 +29,40 @@ class _ReserveScreenState extends State<ReserveScreen> {
   bool _loading = true;
   List<DateTime> parsedSchedule = [];
 
-  Future<void> fetchTrainings(Training training) async {
-    try {
-      final response = await http.get(training.dbUrl +
-          '&orderBy="fecha"&equalTo="${nextClassDay(parsedSchedule).day.toString() + "/" + nextClassDay(parsedSchedule).month.toString()}"');
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if (counts.keys.length > 0) {
-        counts.clear();
-        _createCountsMap(training);
-      }
-      if (extractedData == null || extractedData.length == 0) {
-        setState(() {
-          _loading = false;
-        });
-        return;
-      }
-      if (extractedData["error"] != null) {
-        //Hubo un error
-        return;
-      }
-      setState(() {
-        extractedData.forEach((key, data) {
-          String hour = data["hora"];
-          String turnDni = data["dni"];
-          counts[hour]++;
-          if (turnDni == dni) hasReserved[hour] = true;
-        });
-        _loading = false;
-      });
-    } catch (error) {
-      throw (error);
-    }
+  Future<void> fetchTurns(Training training) async {
+    if (training == null) return;
+    final turns = await Provider.of<Turns>(context, listen: false)
+        .getTurnsOfDay(
+            nextClassDay(parsedSchedule).day.toString() +
+                "/" +
+                nextClassDay(parsedSchedule).month.toString(),
+            training.name);
+    turns.forEach(
+      (turn) {
+        String hour = turn.hour;
+        String turnDni = turn.dni;
+        // Increase turns count of this turns day.
+        counts[hour]++;
+        // If the turn is from the active user, check the hasReserved
+        // flag for this hour.
+        if (turnDni == dni) hasReserved[hour] = true;
+      },
+    );
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
   void initState() {
     Future.delayed(Duration.zero).then((_) {
       training = ModalRoute.of(context).settings.arguments;
+      final authData = Provider.of<Auth>(context, listen: false);
+      name = authData.userName;
+      dni = authData.userDni;
       parsedSchedule = training.getParsedSchedule();
       _createCountsMap(training);
-      fetchTrainings(training);
+      fetchTurns(training);
     });
     super.initState();
   }
@@ -130,6 +121,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
   }
 
   List<Widget> _buildHourSelector(Training training) {
+    if (training == null) return [];
     final DateTime nextDay = nextClassDay(parsedSchedule);
     if (selectedHour.isEmpty && parsedSchedule.isNotEmpty)
       selectedHour = DateFormat("H:mm").format(parsedSchedule
@@ -163,18 +155,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    training = ModalRoute.of(context).settings.arguments;
-    final authData = Provider.of<Auth>(context);
-    final turnsData = Provider.of<Turns>(context);
-
-    name = authData.userName;
-    dni = authData.userDni;
-    //_createCountsMap(training);
     return Scaffold(
       backgroundColor: Colors.black,
       body: RefreshIndicator(
         onRefresh: () {
-          return fetchTrainings(training);
+          return fetchTurns(training);
         },
         color: MAIN_COLOR,
         backgroundColor: Colors.white70,
@@ -233,7 +218,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                 ),
                               ],
                             ),
-                            InfoCard("Actividad", training.name),
+                            InfoCard(
+                                "Actividad",
+                                training == null
+                                    ? "Cargando..."
+                                    : training.name),
 //                Container(
 //                  padding: const EdgeInsets.symmetric(
 //                    horizontal: 15,
@@ -285,8 +274,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                           SliverGridDelegateWithMaxCrossAxisExtent(
                                         maxCrossAxisExtent: 80,
                                         childAspectRatio: 3 / 2,
-                                        mainAxisSpacing: 0,
-                                        crossAxisSpacing: 5,
                                       ),
                                       padding: const EdgeInsets.all(0),
                                       shrinkWrap: true,
@@ -303,7 +290,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                 bottom: 10,
                               ),
                               child: Text(
-                                _loading
+                                _loading || training == null
                                     ? "Cargando..."
                                     : hasReserved[selectedHour]
                                         ? "Usted ya tiene una reserva para esta clase."
@@ -317,7 +304,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                 ),
                               ),
                             ),
-                            InfoCard("Nombre", name),
+                            InfoCard(
+                                "Nombre", name),
                             InfoCard("Dni", dni),
                           ],
                         ),
@@ -339,11 +327,12 @@ class _ReserveScreenState extends State<ReserveScreen> {
                 padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.25, vertical: 10),
                 onPressed: (_loading ||
+                        training == null ||
                         counts[selectedHour] >= training.maxSchedules ||
                         hasReserved[selectedHour])
                     ? null
                     : () {
-                        turnsData.createTurn(
+                        Provider.of<Turns>(context, listen: false).createTurn(
                           training: training,
                           dni: dni,
                           name: name,

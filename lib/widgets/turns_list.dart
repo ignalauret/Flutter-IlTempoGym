@@ -12,21 +12,11 @@ class TurnsList extends StatelessWidget {
   TurnsList(this.dni);
   final String dni;
 
-  Future<List<Turn>> getUserTurns(
-      Turns turnsData, Trainings trainingsData) async {
-    List<String> urls = [];
-    final trainings = await trainingsData.fetchTrainings();
-    trainings.forEach((training) => urls.add(training.dbUrl));
-    return turnsData.getUsersTurns(urls);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final trainingData = Provider.of<Trainings>(context, listen: false);
     final turnsData = Provider.of<Turns>(context, listen: true);
-
     return FutureBuilder<List<Turn>>(
-      future: getUserTurns(turnsData, trainingData),
+      future: turnsData.getUsersTurns(),
       builder: (context, snapshot) {
         if (snapshot.data != null) {
           if (snapshot.hasData) {

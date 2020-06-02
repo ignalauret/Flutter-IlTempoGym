@@ -18,26 +18,23 @@ class Turns extends ChangeNotifier {
 
   List<Turn> _turns = [];
 
-  Future<List<Turn>> getUsersTurns(List<String> urls) async {
+  Future<List<Turn>> getUsersTurns() async {
     if (_turns.isNotEmpty && !_newTurn) return [..._turns];
     _turns = [];
     _newTurn = false;
-    for (var url in urls) {
-      final response =
-          await http.get(url + '&orderBy="dni"&equalTo="$userDni"');
-      print(response);
-      if (response == null) continue;
-      final turns = json.decode(response.body) as Map<String, dynamic>;
-      turns.forEach((id, data) {
-        Turn turn = Turn(
-            id: id,
-            hour: data["hora"],
-            day: data["dia"],
-            training: data["clase"],
-            date: data["fecha"]);
-        _turns.add(turn);
-      });
-    }
+    final response = await http.get(
+        'https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken&orderBy="dni"&equalTo="$userDni"');
+    if (response == null) return [];
+    final turns = json.decode(response.body) as Map<String, dynamic>;
+    turns.forEach((id, data) {
+      Turn turn = Turn(
+          id: id,
+          hour: data["hora"],
+          day: data["dia"],
+          training: data["clase"],
+          date: data["fecha"]);
+      _turns.add(turn);
+    });
     return [..._turns];
   }
 
@@ -48,7 +45,8 @@ class Turns extends ChangeNotifier {
       String day,
       String date,
       String hour}) {
-    final url = training.dbUrl;
+    final url =
+        "https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken";
     http.post(
       url,
       body: json.encode({
@@ -64,25 +62,32 @@ class Turns extends ChangeNotifier {
   }
 
   Future<void> cancelTurn(String id, String training) async {
-    switch (training) {
-      case "Musculacion":
-        http.delete(
-            "https://il-tempo-dda8e.firebaseio.com/musculacion/$id.json?auth=$authToken");
-        break;
-      case "Spinning":
-        http.delete(
-            "https://il-tempo-dda8e.firebaseio.com/spinning/$id.json?auth=$authToken");
-        break;
-      case "Zumba":
-        http.delete(
-            "https://il-tempo-dda8e.firebaseio.com/zumba/$id.json?auth=$authToken");
-        break;
-      case "Yoga":
-        http.delete(
-            "https://il-tempo-dda8e.firebaseio.com/yoga/$id.json?auth=$authToken");
-        break;
-    }
+    // Remove from memory
     _turns.removeWhere((turn) => turn.id == id);
+    // Remove from DB
+    http.delete("https://il-tempo-dda8e.firebaseio.com/turnos/$id.json?auth=$authToken");
     notifyListeners();
+  }
+
+  Future<List<Turn>> getTurnsOfDay(String day, String training) async {
+    final response = await http.get(
+        'https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken&orderBy="fecha"&equalTo="$day"');
+    if (response == null) return [];
+    final turns = json.decode(response.body) as Map<String, dynamic>;
+    final List<Turn> result = [];
+    turns.forEach((id, data) {
+      if (data["clase"] == training) {
+        Turn turn = Turn(
+          id: id,
+          hour: data["hora"],
+          day: data["dia"],
+          training: data["clase"],
+          date: data["fecha"],
+          dni: data["dni"],
+        );
+        result.add(turn);
+      }
+    });
+    return result;
   }
 }

@@ -14,41 +14,45 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _showErrorMessage(String message) {
     showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              backgroundColor: CARD_COLOR,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(BORDER_RADIUS)),
-              contentPadding: const EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: 0,
-              ),
-              titlePadding: const EdgeInsets.only(
-                top: 20,
-                bottom: 0,
-                left: 20,
-                right: 20,
-              ),
-              title: Text(
-                "Error en la autenticación",
-                style: TextStyle(color: Colors.red),
-              ),
-              content: Text(
-                message,
-                style: TextStyle(color: Colors.white),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    "Ok",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () => Navigator.of(ctx).pop(),
-                )
-              ],
-            ));
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: CARD_COLOR,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(BORDER_RADIUS)),
+        contentPadding: const EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+          bottom: 0,
+        ),
+        titlePadding: const EdgeInsets.only(
+          top: 20,
+          bottom: 0,
+          left: 20,
+          right: 20,
+        ),
+
+        title: Text(
+          "Error en la autenticación",
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text(
+          message,
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              "Ok",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () => Navigator.of(ctx).pop(),
+          )
+        ],
+      ),
+    ).then((_) {
+      _passwordController.clear();
+    });
   }
 
   Widget _buildInputText(

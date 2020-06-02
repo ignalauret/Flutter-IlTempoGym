@@ -54,7 +54,6 @@ class Trainings with ChangeNotifier {
                 );
               return result;
             }).toList(),
-            dbUrl: data["dbUrl"] + "?auth=$authToken",
             maxSchedules: data["maxSchedules"],
             duration: data["duration"],
           ),
