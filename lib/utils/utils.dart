@@ -9,6 +9,19 @@ bool compareHours(DateTime d1, DateTime d2) {
   return true;
 }
 
+// Return if date d1 is before date d2.
+int compareDates(String d1, String d2) {
+  List<String> date1 = d1.split("/");
+  List<String> date2 = d2.split("/");
+  // Check months.
+  if (int.parse(date1[1]) < int.parse(date2[1])) return -1;
+  if (int.parse(date1[1]) > int.parse(date2[1])) return 1;
+  // Check days
+  if (int.parse(date1[0]) < int.parse(date2[0])) return -1;
+  if (int.parse(date1[0]) > int.parse(date2[0])) return 1;
+  return 0;
+}
+
 DateTime nextClassDay(List<DateTime> possibleDays) {
   for (int i = 0; i < 7; i++) {
     for (DateTime day in possibleDays) {

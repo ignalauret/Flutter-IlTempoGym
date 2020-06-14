@@ -73,11 +73,15 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             padding: const EdgeInsets.only(left: 15),
             width: MediaQuery.of(context).size.width * 0.35 - 30,
-            child: Text(
-              hint,
-              style: TextStyle(
-                color: MAIN_COLOR,
-                fontSize: 15,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                hint,
+                style: TextStyle(
+                  color: MAIN_COLOR,
+                  fontSize: 15,
+                ),
               ),
             ),
           ),

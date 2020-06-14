@@ -71,10 +71,15 @@ class _ReserveScreenState extends State<ReserveScreen> {
     if (counts.keys.length > 0) return;
     final DateTime nextDay = nextClassDay(parsedSchedule);
     parsedSchedule.forEach((schedule) {
+      // Check if is the same day.
       if (schedule.weekday != nextDay.weekday) return;
+      // Check if the class is today and has passed.
+      if (schedule.weekday == DateTime.now().weekday &&
+          compareHours(schedule, DateTime.now())) return;
+      // Check if it exists.
       if (!counts.containsKey(DateFormat("H:mm").format(schedule))) {
-        counts.addAll({DateFormat("H:mm").format(schedule): 0});
-        hasReserved.addAll({DateFormat("H:mm").format(schedule): false});
+        counts[DateFormat("H:mm").format(schedule)] = 0;
+        hasReserved[DateFormat("H:mm").format(schedule)] = false;
       }
     });
   }
@@ -105,6 +110,47 @@ class _ReserveScreenState extends State<ReserveScreen> {
         ),
         content: Text(
           "Turno reservado para ${training.name} el dia ${nextClassDay(parsedSchedule).day.toString() + "/" + nextClassDay(parsedSchedule).month.toString()} a las $selectedHour",
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              "Ok",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () => Navigator.of(ctx).pop(),
+          )
+        ],
+      ),
+    ).then((_) => Navigator.of(context).pop());
+  }
+
+  void showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: CARD_COLOR,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(BORDER_RADIUS)),
+        contentPadding: const EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+          bottom: 0,
+        ),
+        titlePadding: const EdgeInsets.only(
+          top: 20,
+          bottom: 0,
+          left: 20,
+          right: 20,
+        ),
+        title: Icon(
+          Icons.error,
+          size: 45,
+          color: Colors.red,
+        ),
+        content: Text(
+          "Lo sentimos hubo un error, intente de nuevo mas tarde.",
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
@@ -223,29 +269,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                 training == null
                                     ? "Cargando..."
                                     : training.name),
-//                Container(
-//                  padding: const EdgeInsets.symmetric(
-//                    horizontal: 15,
-//                    vertical: 5,
-//                  ),
-//                  width: size.width,
-//                  height: size.height * 0.12,
-//                  child: Column(
-//                    children: <Widget>[
-//                      Align(
-//                          alignment: Alignment.centerLeft,
-//                          child: Text(
-//                            "Elige un dia",
-//                            textAlign: TextAlign.start,
-//                            style: TITLE_STYLE,
-//                          )),
-//                      Row(
-//                        mainAxisAlignment: MainAxisAlignment.center,
-//                        children: _buildDaySelector(training),
-//                      ),
-//                    ],
-//                  ),
-//                ),
                             InfoCard(
                                 "Dia",
                                 counts.isEmpty
@@ -304,8 +327,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                 ),
                               ),
                             ),
-                            InfoCard(
-                                "Nombre", name),
+                            InfoCard("Nombre", name),
                             InfoCard("Dni", dni),
                           ],
                         ),
@@ -332,7 +354,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
                         hasReserved[selectedHour])
                     ? null
                     : () {
-                        Provider.of<Turns>(context, listen: false).createTurn(
+                        Provider.of<Turns>(context, listen: false)
+                            .createTurn(
                           training: training,
                           dni: dni,
                           name: name,
@@ -341,8 +364,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
                               "/" +
                               nextClassDay(parsedSchedule).month.toString(),
                           hour: selectedHour,
-                        );
-                        showSuccessDialog(context);
+                        )
+                            .then((value) {
+                          if (value) showSuccessDialog(context);
+                          else showErrorDialog(context);
+                        });
                       },
                 textColor: Colors.white,
                 color: MAIN_COLOR,

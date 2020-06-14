@@ -34,11 +34,11 @@ class Auth extends ChangeNotifier {
   }
 
   String get userName {
-    return _userName == null ? "Nombre default" : _userName;
+    return _userName == null ? "Cargando..." : _userName;
   }
 
   String get userDni {
-    return _userDni == null ? "12345678" : _userDni;
+    return _userDni == null ? "Cargando..." : _userDni;
   }
 
   Future<void> fetchUserData() async {
@@ -101,14 +101,6 @@ class Auth extends ChangeNotifier {
     });
     prefs.setString('userData', userData);
   }
-
-//  void printData() {
-//    print('token: $_token');
-//    print('userId: $_userId,');
-//    print('userDni: $_userDni,');
-//    print('userName: $_userName,');
-//    print('expireDate: $_expireDate.toIso8601String()');
-//  }
 
   Future<bool> tryAutoLogIn() async {
     final prefs = await SharedPreferences.getInstance();

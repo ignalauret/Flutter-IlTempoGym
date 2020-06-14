@@ -26,11 +26,14 @@ class TurnsListItem extends StatelessWidget {
             margin: const EdgeInsets.only(left: 15),
             alignment: Alignment.center,
             width: (width - 60) * 0.3,
-            child: Text(
-              turn.training,
-              style: TextStyle(
-                color: color,
-                fontSize: 15,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                turn.training,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 15,
+                ),
               ),
             ),
           ),
@@ -38,11 +41,14 @@ class TurnsListItem extends StatelessWidget {
             width: (width - 60) * 0.3,
             alignment: Alignment.center,
 
-            child: Text(
-              "${turn.day} ${turn.date}",
-              style: TextStyle(
-                color: color,
-                fontSize: 16,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "${turn.day} ${turn.date}",
+                style: TextStyle(
+                  color: color,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
