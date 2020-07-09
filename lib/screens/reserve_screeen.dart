@@ -170,11 +170,18 @@ class _ReserveScreenState extends State<ReserveScreen> {
     if (training == null) return [];
     final DateTime nextDay = nextClassDay(parsedSchedule);
     if (selectedHour.isEmpty && parsedSchedule.isNotEmpty)
-      selectedHour = DateFormat("H:mm").format(parsedSchedule
-          .firstWhere((schedule) => schedule.weekday == nextDay.weekday));
+      selectedHour = DateFormat("H:mm").format(parsedSchedule.firstWhere(
+          (schedule) =>
+              schedule.weekday == nextDay.weekday &&
+              (DateTime.now().weekday != nextDay.weekday ||
+                  !compareHours(schedule, DateTime.now()))));
+    print("selected hour = $selectedHour");
     List<Widget> result = [];
     parsedSchedule
-        .where((schedule) => schedule.weekday == nextDay.weekday)
+        .where((schedule) =>
+            schedule.weekday == nextDay.weekday &&
+            (DateTime.now().weekday != nextDay.weekday ||
+                !compareHours(schedule, DateTime.now())))
         .forEach(
           (schedule) => result.add(
             Container(
@@ -366,8 +373,10 @@ class _ReserveScreenState extends State<ReserveScreen> {
                           hour: selectedHour,
                         )
                             .then((value) {
-                          if (value) showSuccessDialog(context);
-                          else showErrorDialog(context);
+                          if (value)
+                            showSuccessDialog(context);
+                          else
+                            showErrorDialog(context);
                         });
                       },
                 textColor: Colors.white,

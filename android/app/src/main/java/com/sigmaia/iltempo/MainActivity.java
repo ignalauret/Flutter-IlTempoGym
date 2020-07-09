@@ -1,4 +1,4 @@
-package com.sigmaia.iltempo;
+package com.ignalau.iltempo;
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;
