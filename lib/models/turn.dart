@@ -3,8 +3,8 @@ class Turn {
   String training;
   String date;
   String hour;
-  String day;
+  //String day;
   String dni;
 
-  Turn({this.id, this.hour, this.day, this.training, this.date, this.dni});
+  Turn({this.id, this.hour,  this.training, this.date, this.dni});
 }

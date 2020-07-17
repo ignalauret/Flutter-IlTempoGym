@@ -366,7 +366,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
                           training: training,
                           dni: dni,
                           name: name,
-                          day: intToDay(nextClassDay(parsedSchedule).weekday),
                           date: nextClassDay(parsedSchedule).day.toString() +
                               "/" +
                               nextClassDay(parsedSchedule).month.toString(),

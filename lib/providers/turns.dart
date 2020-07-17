@@ -31,7 +31,6 @@ class Turns extends ChangeNotifier {
       Turn turn = Turn(
           id: id,
           hour: data["hora"],
-          day: data["dia"],
           training: data["clase"],
           date: data["fecha"]);
       _turns.add(turn);
@@ -44,7 +43,6 @@ class Turns extends ChangeNotifier {
       {Training training,
       String dni,
       String name,
-      String day,
       String date,
       String hour}) async {
     final url =
@@ -55,7 +53,6 @@ class Turns extends ChangeNotifier {
         "dni": dni,
         "nombre": name,
         "clase": training.name,
-        "dia": day,
         "fecha": date,
         "hora": hour,
       }),
@@ -84,7 +81,6 @@ class Turns extends ChangeNotifier {
         Turn turn = Turn(
           id: id,
           hour: data["hora"],
-          day: data["dia"],
           training: data["clase"],
           date: data["fecha"],
           dni: data["dni"],

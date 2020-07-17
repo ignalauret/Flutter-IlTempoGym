@@ -44,7 +44,7 @@ class TurnsListItem extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                "${turn.day} ${turn.date}",
+                "${turn.date}",
                 style: TextStyle(
                   color: color,
                   fontSize: 16,

@@ -39,8 +39,7 @@ class TurnsList extends StatelessWidget {
                         Turn(
                             training: "Clase",
                             hour: "Hora",
-                            day: "Fecha",
-                            date: " "),
+                            date: "Fecha"),
                         MAIN_COLOR),
                     Expanded(
                       child: ListView.builder(
@@ -104,7 +103,7 @@ class TurnsList extends StatelessWidget {
                                             size: 60,
                                           ),
                                           content: Text(
-                                            "Seguro quiere cancelar el turno de ${snapshot.data[index].training} del ${snapshot.data[index].day} ${snapshot.data[index].date} a las ${snapshot.data[index].hour}?",
+                                            "Seguro quiere cancelar el turno de ${snapshot.data[index].training} del ${snapshot.data[index].date} a las ${snapshot.data[index].hour}?",
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 17,
