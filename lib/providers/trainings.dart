@@ -25,6 +25,7 @@ class Trainings with ChangeNotifier {
             teacher: data["profesor"],
             imageUrl: data["imageUrl"],
             bannerUrl: data["bannerUrl"],
+            interval: data["intervalo"] == null ? 0 : int.parse(data["intervalo"].toString()),
             schedule: (data["horario"] as List).map((schedule) {
               List<String> date = schedule.toString().split(".");
               final List<DateTime> result = [];

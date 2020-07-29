@@ -122,7 +122,6 @@ class Auth extends ChangeNotifier {
         }),
       );
       final userData = json.decode(response.body);
-      print(userData);
       if (response.statusCode == 200) {
         // If i am successful, log in.
         final newExpiryDate = DateTime.now()
@@ -148,7 +147,6 @@ class Auth extends ChangeNotifier {
     _userName = extractedUserData['userName'];
     _expireDate = expiryDate;
     _userDni = extractedUserData['userDni'];
-    print(_refreshToken);
     notifyListeners();
     return true;
   }

@@ -7,9 +7,9 @@ class Training {
   final String imageUrl;
   final String bannerUrl;
   final List<List<DateTime>> schedule;
-  final String dbUrl;
   final int maxSchedules;
   final String duration;
+  final int interval;
 
   Training({
     @required this.name,
@@ -17,10 +17,10 @@ class Training {
     @required this.teacher,
     @required this.imageUrl,
     @required this.schedule,
-    @required this.dbUrl,
     @required this.maxSchedules,
     @required this.bannerUrl,
     @required this.duration,
+    @required this.interval,
   });
 
   List<DateTime> getParsedSchedule() {
@@ -30,12 +30,12 @@ class Training {
         if (listDates.length == 1) {
           result.add(listDates[0]);
         } else {
-          final int hours = listDates[1].hour - listDates[0].hour;
-          for (int i = 0; i <= hours; i++) {
-            result.add(
-              DateTime(listDates[0].year, listDates[0].month, listDates[0].day,
-                  listDates[0].hour + i, listDates[0].minute),
-            );
+          var scheduleHour = DateTime(listDates[0].year, listDates[0].month,
+              listDates[0].day, listDates[0].hour, listDates[0].minute);
+          while (scheduleHour.isBefore(listDates.last)) {
+            print(scheduleHour);
+            result.add(scheduleHour);
+            scheduleHour = scheduleHour.add(Duration(minutes: this.interval));
           }
         }
       },

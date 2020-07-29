@@ -175,7 +175,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
               schedule.weekday == nextDay.weekday &&
               (DateTime.now().weekday != nextDay.weekday ||
                   !compareHours(schedule, DateTime.now()))));
-    print("selected hour = $selectedHour");
     List<Widget> result = [];
     parsedSchedule
         .where((schedule) =>
