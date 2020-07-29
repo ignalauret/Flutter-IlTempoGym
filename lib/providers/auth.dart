@@ -80,7 +80,6 @@ class Auth extends ChangeNotifier {
       _expireDate = DateTime.now()
           .add(Duration(seconds: int.parse(responseData["expiresIn"])));
       await fetchUserData();
-      _autoLogOut();
       notifyListeners();
       saveToPrefs();
       return "";
@@ -100,6 +99,8 @@ class Auth extends ChangeNotifier {
       'expireDate': _expireDate.toIso8601String()
     });
     prefs.setString('userData', userData);
+    print(_refreshToken);
+    print(_expireDate);
   }
 
   Future<bool> tryAutoLogIn() async {
@@ -125,8 +126,8 @@ class Auth extends ChangeNotifier {
       if (response.statusCode == 200) {
         // If i am successful, log in.
         final newExpiryDate = DateTime.now()
-            .add(Duration(seconds: int.parse(userData["expiresIn"])));
-        _token = userData["id_token"];
+            .add(Duration(seconds: int.parse(userData["expires_in"])));
+        _token = userData["access_token"];
         _refreshToken = userData["refresh_token"];
         _userId = extractedUserData["userId"];
         _expireDate = newExpiryDate;
@@ -134,7 +135,6 @@ class Auth extends ChangeNotifier {
         _userName = extractedUserData["userName"];
         notifyListeners();
         saveToPrefs();
-        _autoLogOut();
         return true;
       } else {
         print("Failed refresh");
@@ -143,12 +143,13 @@ class Auth extends ChangeNotifier {
     }
     // If it hasn't expired, log in.
     _token = extractedUserData['token'];
+    _refreshToken = extractedUserData['refreshToken'];
     _userId = extractedUserData['userId'];
     _userName = extractedUserData['userName'];
     _expireDate = expiryDate;
     _userDni = extractedUserData['userDni'];
+    print(_refreshToken);
     notifyListeners();
-    _autoLogOut();
     return true;
   }
 
@@ -165,13 +166,5 @@ class Auth extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
     notifyListeners();
-  }
-
-  void _autoLogOut() {
-    if (_authTimer != null) {
-      _authTimer.cancel();
-    }
-    final seconds = _expireDate.difference(DateTime.now()).inSeconds;
-    _authTimer = Timer(Duration(seconds: seconds), logOut);
   }
 }
