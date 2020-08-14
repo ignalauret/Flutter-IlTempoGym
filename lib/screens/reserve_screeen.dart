@@ -70,12 +70,15 @@ class _ReserveScreenState extends State<ReserveScreen> {
   void _createCountsMap(Training training) {
     if (counts.keys.length > 0) return;
     final DateTime nextDay = nextClassDay(parsedSchedule);
+    print("Next class day = $nextDay");
     parsedSchedule.forEach((schedule) {
       // Check if is the same day.
       if (schedule.weekday != nextDay.weekday) return;
       // Check if the class is today and has passed.
       if (schedule.weekday == DateTime.now().weekday &&
-          compareHours(schedule, DateTime.now())) return;
+          compareHours(schedule, DateTime.now())) {
+        return;
+      }
       // Check if it exists.
       if (!counts.containsKey(DateFormat("H:mm").format(schedule))) {
         counts[DateFormat("H:mm").format(schedule)] = 0;

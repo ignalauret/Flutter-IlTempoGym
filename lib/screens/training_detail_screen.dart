@@ -9,11 +9,12 @@ import 'package:iltempo/widgets/schedule_card.dart';
 
 class TrainingDetailScreen extends StatelessWidget {
   static const String routeName = "/detailScreen";
-  final List<String> days = ["Lun", "Mar", "Mie", "Jue", "Vie"];
+  final List<String> days = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
 
   @override
   Widget build(BuildContext context) {
     final Training training = ModalRoute.of(context).settings.arguments;
+    print(training.name);
 
     final descriptions = training.description.split(("."));
     final Size size = MediaQuery.of(context).size;
@@ -139,8 +140,9 @@ class TrainingDetailScreen extends StatelessWidget {
                     days[index],
                   ),
                   size: size,
+                  withSaturday: training.name == "Musculacion",
                 ),
-                itemCount: 5,
+                itemCount: training.name == "Musculacion" ? 6 : 5,
               ),
             ),
             InfoCard("Profesor", training.teacher),

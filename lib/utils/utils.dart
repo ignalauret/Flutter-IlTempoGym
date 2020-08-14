@@ -26,8 +26,10 @@ DateTime nextClassDay(List<DateTime> possibleDays) {
   for (int i = 0; i < 7; i++) {
     for (DateTime day in possibleDays) {
       if (day.weekday == DateTime.now().add(Duration(days: i)).weekday) {
-        if (i != 0 || compareHours(DateTime.now(), day))
+        if (i != 0 || compareHours(DateTime.now(), day)){
+          print("Entro");
           return DateTime.now().add(Duration(days: i));
+        }
       }
     }
   }
