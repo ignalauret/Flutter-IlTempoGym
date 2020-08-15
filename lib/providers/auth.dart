@@ -99,8 +99,6 @@ class Auth extends ChangeNotifier {
       'expireDate': _expireDate.toIso8601String()
     });
     prefs.setString('userData', userData);
-    print(_refreshToken);
-    print(_expireDate);
   }
 
   Future<bool> tryAutoLogIn() async {

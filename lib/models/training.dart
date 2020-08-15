@@ -8,6 +8,7 @@ class Training {
   final String bannerUrl;
   final List<List<DateTime>> schedule;
   final int maxSchedules;
+  final int freeGymMaxSchedules;
   final String duration;
   final int interval;
 
@@ -21,6 +22,7 @@ class Training {
     @required this.bannerUrl,
     @required this.duration,
     @required this.interval,
+    this.freeGymMaxSchedules = 0,
   });
 
   List<DateTime> getParsedSchedule() {
@@ -33,7 +35,6 @@ class Training {
           var scheduleHour = DateTime(listDates[0].year, listDates[0].month,
               listDates[0].day, listDates[0].hour, listDates[0].minute);
           while (scheduleHour.isBefore(listDates.last)) {
-            print(scheduleHour);
             result.add(scheduleHour);
             scheduleHour = scheduleHour.add(Duration(minutes: this.interval));
           }

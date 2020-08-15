@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:iltempo/providers/auth.dart';
+import 'package:iltempo/providers/trainings.dart';
 import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
@@ -70,7 +71,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
   void _createCountsMap(Training training) {
     if (counts.keys.length > 0) return;
     final DateTime nextDay = nextClassDay(parsedSchedule);
-    print("Next class day = $nextDay");
     parsedSchedule.forEach((schedule) {
       // Check if is the same day.
       if (schedule.weekday != nextDay.weekday) return;
@@ -167,6 +167,15 @@ class _ReserveScreenState extends State<ReserveScreen> {
         ],
       ),
     ).then((_) => Navigator.of(context).pop());
+  }
+
+  int getMaxCount(String selectedHour) {
+    if(training.name != "Musculacion") return training.maxSchedules;
+    final DateTime date = nextClassDay(parsedSchedule);
+    final parsedHour = getParsedHour(selectedHour);
+    final DateTime selectedDate = DateTime(date.year, date.month, date.day, parsedHour[0], parsedHour[1]);
+    final maxSchedules = Provider.of<Trainings>(context, listen: false).getMaxSchedule(training, selectedDate);
+    return maxSchedules;
   }
 
   List<Widget> _buildHourSelector(Training training) {
@@ -327,8 +336,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                     : hasReserved[selectedHour]
                                         ? "Usted ya tiene una reserva para esta clase."
                                         : counts[selectedHour] <
-                                                training.maxSchedules
-                                            ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${training.maxSchedules}"
+                                                getMaxCount(selectedHour)
+                                            ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${getMaxCount(selectedHour)}"
                                             : "Lo sentimos, la clase de las $selectedHour está llena",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -359,7 +368,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                     horizontal: size.width * 0.25, vertical: 10),
                 onPressed: (_loading ||
                         training == null ||
-                        counts[selectedHour] >= training.maxSchedules ||
+                        counts[selectedHour] >= getMaxCount(selectedHour) ||
                         hasReserved[selectedHour])
                     ? null
                     : () {

@@ -14,8 +14,6 @@ class TrainingDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Training training = ModalRoute.of(context).settings.arguments;
-    print(training.name);
-
     final descriptions = training.description.split(("."));
     final Size size = MediaQuery.of(context).size;
 

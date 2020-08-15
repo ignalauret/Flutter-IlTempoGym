@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:iltempo/utils/utils.dart';
 import '../models/training.dart';
 
 import 'package:http/http.dart' as http;
@@ -25,7 +26,9 @@ class Trainings with ChangeNotifier {
             teacher: data["profesor"],
             imageUrl: data["imageUrl"],
             bannerUrl: data["bannerUrl"],
-            interval: data["intervalo"] == null ? 0 : int.parse(data["intervalo"].toString()),
+            interval: data["intervalo"] == null
+                ? 0
+                : int.parse(data["intervalo"].toString()),
             schedule: (data["horario"] as List).map((schedule) {
               List<String> date = schedule.toString().split(".");
               final List<DateTime> result = [];
@@ -56,11 +59,35 @@ class Trainings with ChangeNotifier {
               return result;
             }).toList(),
             maxSchedules: data["maxSchedules"],
+            freeGymMaxSchedules: name == "Musculacion"
+                ? data["freeGymMaxSchedules"]
+                : data["maxSchedules"],
             duration: data["duration"],
           ),
         );
       },
     );
     return [..._trainings];
+  }
+
+  // If there is a group class at the same schedule return normal schedule,
+  // else return bigger schedule.
+  int getMaxSchedule(Training training, DateTime schedule) {
+    if (_isGroupClassAtSchedule(schedule)) {
+      return training.maxSchedules;
+    } else {
+      return training.freeGymMaxSchedules;
+    }
+  }
+
+  // Check if there is a group class at the selected schedule
+  bool _isGroupClassAtSchedule(DateTime schedule) {
+    for (Training training in _trainings) {
+      if (training.name == "Musculacion") continue;
+      for (DateTime trainingSchedule in training.getParsedSchedule()) {
+        if (isSameSchedule(trainingSchedule, schedule)) return true;
+      }
+    }
+    return false;
   }
 }
