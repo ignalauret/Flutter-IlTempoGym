@@ -42,11 +42,14 @@ class _ReserveScreenState extends State<ReserveScreen> {
       (turn) {
         String hour = turn.hour;
         String turnDni = turn.dni;
+        print(hour);
         // Increase turns count of this turns day.
-        counts[hour]++;
-        // If the turn is from the active user, check the hasReserved
-        // flag for this hour.
-        if (turnDni == dni) hasReserved[hour] = true;
+        if (counts.containsKey(hour)) {
+          counts[hour]++;
+          // If the turn is from the active user, check the hasReserved
+          // flag for this hour.
+          if (turnDni == dni) hasReserved[hour] = true;
+        }
       },
     );
     setState(() {
@@ -170,11 +173,13 @@ class _ReserveScreenState extends State<ReserveScreen> {
   }
 
   int getMaxCount(String selectedHour) {
-    if(training.name != "Musculacion") return training.maxSchedules;
+    if (training.name != "Musculacion") return training.maxSchedules;
     final DateTime date = nextClassDay(parsedSchedule);
     final parsedHour = getParsedHour(selectedHour);
-    final DateTime selectedDate = DateTime(date.year, date.month, date.day, parsedHour[0], parsedHour[1]);
-    final maxSchedules = Provider.of<Trainings>(context, listen: false).getMaxSchedule(training, selectedDate);
+    final DateTime selectedDate =
+        DateTime(date.year, date.month, date.day, parsedHour[0], parsedHour[1]);
+    final maxSchedules = Provider.of<Trainings>(context, listen: false)
+        .getMaxSchedule(training, selectedDate);
     return maxSchedules;
   }
 

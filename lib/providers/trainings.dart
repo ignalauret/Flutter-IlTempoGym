@@ -60,7 +60,7 @@ class Trainings with ChangeNotifier {
             }).toList(),
             maxSchedules: data["maxSchedules"],
             freeGymMaxSchedules: name == "Musculacion"
-                ? data["freeGymMaxSchedules"]
+                ? 15
                 : data["maxSchedules"],
             duration: data["duration"],
           ),
@@ -74,6 +74,10 @@ class Trainings with ChangeNotifier {
   // else return bigger schedule.
   int getMaxSchedule(Training training, DateTime schedule) {
     if (_isGroupClassAtSchedule(schedule)) {
+      return training.maxSchedules;
+    } else if (_isGroupClassAtSchedule(schedule.add(Duration(minutes: 30)))){
+      return training.maxSchedules;
+    } else if (_isGroupClassAtSchedule(schedule.subtract(Duration(minutes: 30)))) {
       return training.maxSchedules;
     } else {
       return training.freeGymMaxSchedules;
