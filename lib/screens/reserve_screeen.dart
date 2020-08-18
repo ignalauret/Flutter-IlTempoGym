@@ -173,7 +173,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
   }
 
   int getMaxCount(String selectedHour) {
-    if (training.name != "Musculacion") return training.maxSchedules;
+    if (training.name != "Musculación") return training.maxSchedules;
     final DateTime date = nextClassDay(parsedSchedule);
     final parsedHour = getParsedHour(selectedHour);
     final DateTime selectedDate =

@@ -59,8 +59,8 @@ class Trainings with ChangeNotifier {
               return result;
             }).toList(),
             maxSchedules: data["maxSchedules"],
-            freeGymMaxSchedules: name == "Musculacion"
-                ? 15
+            freeGymMaxSchedules: name == "Musculación"
+                ? data["freeGymMaxSchedules"]
                 : data["maxSchedules"],
             duration: data["duration"],
           ),
@@ -87,7 +87,7 @@ class Trainings with ChangeNotifier {
   // Check if there is a group class at the selected schedule
   bool _isGroupClassAtSchedule(DateTime schedule) {
     for (Training training in _trainings) {
-      if (training.name == "Musculacion") continue;
+      if (training.name == "Musculación") continue;
       for (DateTime trainingSchedule in training.getParsedSchedule()) {
         if (isSameSchedule(trainingSchedule, schedule)) return true;
       }
