@@ -39,37 +39,6 @@ class Turns extends ChangeNotifier {
     return [..._turns];
   }
 
-  Future<bool> createTurn(
-      {Training training,
-      String dni,
-      String name,
-      String date,
-      String hour}) async {
-    final url =
-        "https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken";
-    final response = await http.post(
-      url,
-      body: json.encode({
-        "dni": dni,
-        "nombre": name,
-        "clase": training.name,
-        "fecha": date,
-        "hora": hour,
-      }),
-    );
-    newTurn = true;
-    return response.statusCode == 200;
-  }
-
-  Future<void> cancelTurn(String id, String training) async {
-    // Remove from memory
-    _turns.removeWhere((turn) => turn.id == id);
-    // Remove from DB
-    http.delete(
-        "https://il-tempo-dda8e.firebaseio.com/turnos/$id.json?auth=$authToken");
-    notifyListeners();
-  }
-
   Future<List<Turn>> getTurnsOfDay(String day, String training) async {
     final response = await http.get(
         'https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken&orderBy="fecha"&equalTo="$day"');
@@ -89,5 +58,47 @@ class Turns extends ChangeNotifier {
       }
     });
     return result;
+  }
+
+  Future<bool> createTurn({
+    Training training,
+    String dni,
+    String name,
+    String date,
+    String hour,
+  }) async {
+    // Check again if turn is available
+    final List<Turn> turnsOfDay = await getTurnsOfDay(date, training.name);
+    final int turnsOfHour =
+        turnsOfDay.fold(0, (prev, turn) => turn.hour == hour ? prev + 1 : prev);
+    if (turnsOfHour >= training.maxSchedules) return false;
+    // Create the turn
+    final response = await http.post(
+      "https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken",
+      body: json.encode({
+        "dni": dni,
+        "nombre": name,
+        "clase": training.name,
+        "fecha": date,
+        "hora": hour,
+      }),
+    );
+    newTurn = true;
+    return response.statusCode == 200;
+  }
+
+  Future<bool> cancelTurn(String id, String training) async {
+    // Remove from DB
+    final response = await http.delete(
+        "https://il-tempo-dda8e.firebaseio.com/turnos/$id.json?auth=$authToken");
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      // Remove from memory
+      _turns.removeWhere((turn) => turn.id == id);
+      notifyListeners();
+      return true;
+    } else {
+      return false;
+    }
   }
 }

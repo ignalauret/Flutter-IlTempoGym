@@ -49,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
                         Icon(
                           Icons.chevron_left,
                           size: 25,
-                          color: MAIN_COLOR,
+                          color: kMainColor,
                         ),
                         Text(
                           "Volver",
@@ -60,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     color: Colors.white70,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                      borderRadius: BorderRadius.circular(kBorderRadius),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
@@ -99,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                   child: Text(
                     "Mis turnos",
                     textAlign: TextAlign.center,
-                    style: TITLE_STYLE,
+                    style: kTitleStyle,
                   ),
                 ),
               ],

@@ -12,19 +12,19 @@ class SelectHourCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: selected ? MAIN_COLOR : Colors.transparent,
+      color: selected ? kMainColor : Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BORDER_RADIUS),
+        borderRadius: BorderRadius.circular(kBorderRadius),
         side: BorderSide(
-          color: MAIN_COLOR,
+          color: kMainColor,
           width: 2,
         ),
       ),
       child: InkWell(
         onTap: () => onTap(day),
-        splashColor: MAIN_COLOR,
+        splashColor: kMainColor,
         customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BORDER_RADIUS),
+          borderRadius: BorderRadius.circular(kBorderRadius),
         ),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.005),
@@ -35,7 +35,7 @@ class SelectHourCard extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: Text(
               day,
-              style: TextStyle(color: selected ? Colors.black : MAIN_COLOR),
+              style: TextStyle(color: selected ? Colors.black : kMainColor),
             ),
           ),
         ),

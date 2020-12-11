@@ -16,7 +16,7 @@ class ScheduleCard extends StatelessWidget {
       Text(
         day,
         style: TextStyle(
-          color: MAIN_COLOR,
+          color: kMainColor,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -72,10 +72,10 @@ class ScheduleCard extends StatelessWidget {
                 bottom: size.height * 0.015),
             width: size.width * 0.14,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(BORDER_RADIUS),
+              borderRadius: BorderRadius.circular(kBorderRadius),
               color: Colors.transparent,
               border: Border.all(
-                color: MAIN_COLOR,
+                color: kMainColor,
                 width: 2,
               ),
             ),
@@ -93,10 +93,10 @@ class ScheduleCard extends StatelessWidget {
                 bottom: size.height * 0.015),
             width: size.width * 0.15,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(BORDER_RADIUS),
+              borderRadius: BorderRadius.circular(kBorderRadius),
               color: Colors.transparent,
               border: Border.all(
-                color: MAIN_COLOR,
+                color: kMainColor,
                 width: 2,
               ),
             ),

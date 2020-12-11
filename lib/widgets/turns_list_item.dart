@@ -8,7 +8,6 @@ class TurnsListItem extends StatelessWidget {
   final Color color;
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Container(
       height: 45,
       margin: const EdgeInsets.symmetric(
@@ -16,16 +15,13 @@ class TurnsListItem extends StatelessWidget {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(BORDER_RADIUS),
-        color: CARD_COLOR,
+        borderRadius: BorderRadius.circular(kBorderRadius),
+        color: kCardColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Container(
-            margin: const EdgeInsets.only(left: 15),
-            alignment: Alignment.center,
-            width: (width - 60) * 0.3,
+          Expanded(
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
@@ -37,10 +33,7 @@ class TurnsListItem extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: (width - 60) * 0.3,
-            alignment: Alignment.center,
-
+          Expanded(
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
@@ -52,15 +45,15 @@ class TurnsListItem extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(right: 15),
-            alignment: Alignment.center,
-            width: (width - 60) * 0.3,
-            child: Text(
-              turn.hour,
-              style: TextStyle(
-                color: color,
-                fontSize: 16,
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                turn.hour,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),

@@ -16,9 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: CARD_COLOR,
+        backgroundColor: kCardColor,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(BORDER_RADIUS)),
+            borderRadius: BorderRadius.circular(kBorderRadius)),
         contentPadding: const EdgeInsets.only(
           top: 20,
           left: 20,
@@ -64,8 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(BORDER_RADIUS),
-        color: CARD_COLOR,
+        borderRadius: BorderRadius.circular(kBorderRadius),
+        color: kCardColor,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 hint,
                 style: TextStyle(
-                  color: MAIN_COLOR,
+                  color: kMainColor,
                   fontSize: 15,
                 ),
               ),
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(color: Colors.white),
               obscureText: obscure,
               keyboardType: TextInputType.visiblePassword,
-              cursorColor: MAIN_COLOR,
+              cursorColor: kMainColor,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(left: 8, bottom: 3),
                 focusedBorder: UnderlineInputBorder(
@@ -153,9 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 _showErrorMessage(errorMessage);
               },
               textColor: Colors.white,
-              color: MAIN_COLOR,
+              color: kMainColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                borderRadius: BorderRadius.circular(kBorderRadius),
               ),
               disabledColor: Colors.grey,
             ),

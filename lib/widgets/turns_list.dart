@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iltempo/models/turn.dart';
-import 'package:iltempo/providers/trainings.dart';
 import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/widgets/turns_list_item.dart';
@@ -27,7 +25,7 @@ class TurnsList extends StatelessWidget {
                       "No tienes turnos.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: kCardColor,
                         fontSize: 25,
                       ),
                     ),
@@ -35,12 +33,40 @@ class TurnsList extends StatelessWidget {
                 )
               : Column(
                   children: <Widget>[
-                    TurnsListItem(
-                        Turn(
-                            training: "Clase",
-                            hour: "Hora",
-                            date: "Fecha"),
-                        MAIN_COLOR),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                "Clase",
+                                style: TextStyle(color: kMainColor),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                "Fecha",
+                                style: TextStyle(color: kMainColor),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                "Horario",
+                                style: TextStyle(color: kMainColor),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.all(0),
@@ -54,7 +80,7 @@ class TurnsList extends StatelessWidget {
                                 color: Colors.black,
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.circular(BORDER_RADIUS)),
+                                        BorderRadius.circular(kBorderRadius)),
                                 position: RelativeRect.fromLTRB(
                                     position.global.dx,
                                     position.global.dy,
@@ -79,13 +105,12 @@ class TurnsList extends StatelessWidget {
                                 showDialog(
                                     context: context,
                                     builder: (ctx) => AlertDialog(
-                                          backgroundColor: CARD_COLOR,
+                                          backgroundColor: kCardColor,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(
-                                                      BORDER_RADIUS)),
-                                          contentPadding:
-                                              const EdgeInsets.only(
+                                                      kBorderRadius)),
+                                          contentPadding: const EdgeInsets.only(
                                             top: 20,
                                             left: 20,
                                             right: 20,
@@ -120,8 +145,8 @@ class TurnsList extends StatelessWidget {
                                               onPressed: () {
                                                 turnsData.cancelTurn(
                                                     snapshot.data[index].id,
-                                                    snapshot.data[index]
-                                                        .training);
+                                                    snapshot
+                                                        .data[index].training);
                                                 Navigator.of(context).pop();
                                               },
                                             ),
@@ -140,7 +165,9 @@ class TurnsList extends StatelessWidget {
                               });
                             },
                             child: TurnsListItem(
-                                snapshot.data[index], Colors.white),
+                              snapshot.data[index],
+                              Colors.white,
+                            ),
                           );
                         },
                       ),

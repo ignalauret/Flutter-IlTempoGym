@@ -28,6 +28,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
   Map<String, bool> hasReserved = {};
   String selectedHour = "";
   bool _loading = true;
+  bool _tapped = false;
   List<DateTime> parsedSchedule = [];
 
   Future<void> fetchTurns(Training training) async {
@@ -42,7 +43,6 @@ class _ReserveScreenState extends State<ReserveScreen> {
       (turn) {
         String hour = turn.hour;
         String turnDni = turn.dni;
-        print(hour);
         // Increase turns count of this turns day.
         if (counts.containsKey(hour)) {
           counts[hour]++;
@@ -94,9 +94,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: CARD_COLOR,
+        backgroundColor: kCardColor,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(BORDER_RADIUS)),
+            borderRadius: BorderRadius.circular(kBorderRadius)),
         contentPadding: const EdgeInsets.only(
           top: 20,
           left: 20,
@@ -135,9 +135,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: CARD_COLOR,
+        backgroundColor: kCardColor,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(BORDER_RADIUS)),
+            borderRadius: BorderRadius.circular(kBorderRadius)),
         contentPadding: const EdgeInsets.only(
           top: 20,
           left: 20,
@@ -230,12 +230,12 @@ class _ReserveScreenState extends State<ReserveScreen> {
         onRefresh: () {
           return fetchTurns(training);
         },
-        color: MAIN_COLOR,
+        color: kMainColor,
         backgroundColor: Colors.white70,
         child: Column(
           children: <Widget>[
             Container(
-              height: size.height - 65,
+              height: size.height - 100,
               width: size.width,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
@@ -267,7 +267,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                         Icon(
                                           Icons.chevron_left,
                                           size: 25,
-                                          color: MAIN_COLOR,
+                                          color: kMainColor,
                                         ),
                                         Text(
                                           "Volver",
@@ -279,7 +279,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                     color: Colors.white70,
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(BORDER_RADIUS),
+                                          BorderRadius.circular(kBorderRadius),
                                     ),
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
@@ -309,7 +309,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       "Elige un horario",
-                                      style: TITLE_STYLE,
+                                      style: kTitleStyle,
                                     ),
                                   ),
                                   SizedBox(height: 5),
@@ -361,22 +361,23 @@ class _ReserveScreenState extends State<ReserveScreen> {
               ),
             ),
             Container(
-              height: 65,
-              width: size.width,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
+              height: 60,
+              width: size.width * 0.6,
+              margin: const EdgeInsets.symmetric(
                 vertical: 10,
               ),
               child: FlatButton(
-                child: Text("Sacar Turno"),
-                padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.25, vertical: 10),
+                child: Text("Sacar Turno", style: kTitleStyle,),
                 onPressed: (_loading ||
+                        _tapped ||
                         training == null ||
                         counts[selectedHour] >= getMaxCount(selectedHour) ||
                         hasReserved[selectedHour])
                     ? null
                     : () {
+                        setState(() {
+                          _tapped = true;
+                        });
                         Provider.of<Turns>(context, listen: false)
                             .createTurn(
                           training: training,
@@ -395,9 +396,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
                         });
                       },
                 textColor: Colors.white,
-                color: MAIN_COLOR,
+                color: kMainColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                  borderRadius: BorderRadius.circular(kBorderRadius),
                 ),
                 disabledColor: Colors.grey,
               ),

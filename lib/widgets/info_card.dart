@@ -14,8 +14,8 @@ class InfoCard extends StatelessWidget {
         horizontal: 15,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(BORDER_RADIUS),
-        color: CARD_COLOR,
+        borderRadius: BorderRadius.circular(kBorderRadius),
+        color: kCardColor,
       ),
       child: Row(
         children: <Widget>[
@@ -28,7 +28,7 @@ class InfoCard extends StatelessWidget {
               child: Text(
                 hint,
                 style: TextStyle(
-                  color: MAIN_COLOR,
+                  color: kMainColor,
                   fontSize: 15,
                 ),
               ),

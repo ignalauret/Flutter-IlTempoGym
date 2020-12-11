@@ -30,8 +30,8 @@ class TrainingDetailScreen extends StatelessWidget {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(BORDER_RADIUS),
-                      bottomLeft: Radius.circular(BORDER_RADIUS)),
+                      bottomRight: Radius.circular(kBorderRadius),
+                      bottomLeft: Radius.circular(kBorderRadius)),
                   child: Image.asset(
                     training.bannerUrl,
                     color: Colors.black38,
@@ -59,7 +59,7 @@ class TrainingDetailScreen extends StatelessWidget {
                         Icon(
                           Icons.chevron_left,
                           size: 25,
-                          color: MAIN_COLOR,
+                          color: kMainColor,
                         ),
                         Text(
                           "Volver",
@@ -70,7 +70,7 @@ class TrainingDetailScreen extends StatelessWidget {
                     ),
                     color: Colors.white70,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                      borderRadius: BorderRadius.circular(kBorderRadius),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
@@ -89,7 +89,7 @@ class TrainingDetailScreen extends StatelessWidget {
                   child: Text(
                     "Horarios",
                     textAlign: TextAlign.center,
-                    style: TITLE_STYLE,
+                    style: kTitleStyle,
                   ),
                 ),
                 Container(
@@ -167,7 +167,7 @@ class TrainingDetailScreen extends StatelessWidget {
                             ),
                             Icon(
                               Icons.check,
-                              color: MAIN_COLOR,
+                              color: kMainColor,
                               size: 20,
                             ),
                           ],
@@ -189,11 +189,11 @@ class TrainingDetailScreen extends StatelessWidget {
                 );
               },
               textColor: Colors.white,
-              color: MAIN_COLOR,
+              color: kMainColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                borderRadius: BorderRadius.circular(kBorderRadius),
                 side: BorderSide(
-                  color: MAIN_COLOR,
+                  color: kMainColor,
                   width: 2,
                 ),
               ),
