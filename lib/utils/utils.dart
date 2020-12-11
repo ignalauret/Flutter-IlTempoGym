@@ -26,7 +26,7 @@ DateTime nextClassDay(List<DateTime> possibleDays) {
   for (int i = 0; i < 7; i++) {
     for (DateTime day in possibleDays) {
       if (day.weekday == DateTime.now().add(Duration(days: i)).weekday) {
-        if (i != 0 || compareHours(DateTime.now(), day)){
+        if (i != 0 || compareHours(DateTime.now(), day)) {
           return DateTime.now().add(Duration(days: i));
         }
       }
@@ -92,9 +92,9 @@ List<int> getParsedHour(String time) {
 }
 
 bool isSameSchedule(DateTime schedule1, DateTime schedule2) {
-  if(schedule1.weekday != schedule2.weekday) return false;
-  if(schedule1.hour != schedule2.hour) return false;
-  if(schedule1.minute != schedule2.minute) return false;
+  if (schedule1.weekday != schedule2.weekday) return false;
+  if (schedule1.hour != schedule2.hour) return false;
+  if (schedule1.minute != schedule2.minute) return false;
   return true;
 }
 
@@ -161,4 +161,10 @@ String formatDate(DateTime date) {
       break;
   }
   return "$day $number de $month";
+}
+
+DateTime parseDate(String date) {
+  if(date == null) return null;
+  final arr = date.split("/");
+  return DateTime(int.parse(arr[2]), int.parse(arr[1]), int.parse(arr[0]));
 }

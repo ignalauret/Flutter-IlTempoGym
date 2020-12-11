@@ -6,10 +6,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Turns extends ChangeNotifier {
-  Turns(this.authToken, this.userDni);
+  Turns(this.authToken, this.userDni, this.userExpireDate);
 
   final String authToken;
   final String userDni;
+  final DateTime userExpireDate;
+  List<Turn> _turns = [];
+  int _expireMarginDays;
+
   bool _newTurn;
 
   set newTurn(bool turn) {
@@ -17,7 +21,21 @@ class Turns extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Turn> _turns = [];
+  Future<int> get expireMarginDays async {
+    if (_expireMarginDays == null) {
+      await getExpireMargin();
+    }
+    return _expireMarginDays;
+  }
+
+  Future<void> getExpireMargin() async {
+    final response = await http.get(
+        'https://il-tempo-dda8e.firebaseio.com/expireMargin.json?auth=$authToken');
+    if (response.statusCode == 200) {
+      _expireMarginDays = int.parse(response.body);
+      notifyListeners();
+    }
+  }
 
   Future<List<Turn>> getUsersTurns() async {
     if (_turns.isNotEmpty && !_newTurn) return [..._turns];
@@ -60,18 +78,28 @@ class Turns extends ChangeNotifier {
     return result;
   }
 
-  Future<bool> createTurn({
+  /*
+    Return codes:
+      - 200: Success, created turn.
+      - 400: Error, user payment expired.
+      - 401: Error, turn no longer available.
+      - 404: Error, server side.
+   */
+  Future<int> createTurn({
     Training training,
     String dni,
     String name,
     String date,
     String hour,
   }) async {
+    // Check if expired
+    if(userExpireDate == null) return 400;
+    if(userExpireDate.isBefore(DateTime.now().subtract(Duration(days: await expireMarginDays)))) return 400;
     // Check again if turn is available
     final List<Turn> turnsOfDay = await getTurnsOfDay(date, training.name);
     final int turnsOfHour =
         turnsOfDay.fold(0, (prev, turn) => turn.hour == hour ? prev + 1 : prev);
-    if (turnsOfHour >= training.maxSchedules) return false;
+    if (turnsOfHour >= training.maxSchedules) return 401;
     // Create the turn
     final response = await http.post(
       "https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken",
@@ -84,14 +112,13 @@ class Turns extends ChangeNotifier {
       }),
     );
     newTurn = true;
-    return response.statusCode == 200;
+    return response.statusCode == 200 ? 200 : 404;
   }
 
   Future<bool> cancelTurn(String id, String training) async {
     // Remove from DB
     final response = await http.delete(
         "https://il-tempo-dda8e.firebaseio.com/turnos/$id.json?auth=$authToken");
-    print(response.statusCode);
     if (response.statusCode == 200) {
       // Remove from memory
       _turns.removeWhere((turn) => turn.id == id);

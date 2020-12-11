@@ -7,6 +7,7 @@ import 'package:iltempo/screens/profile_screen.dart';
 import 'package:iltempo/screens/reserve_screeen.dart';
 import 'package:iltempo/screens/splash_screen.dart';
 import 'package:iltempo/screens/training_detail_screen.dart';
+import 'package:iltempo/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'providers/trainings.dart';
 
@@ -19,9 +20,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProxyProvider<Auth, Turns>(
-          create: (ctx) => Turns(null, null),
+          create: (ctx) => Turns(null, null, null),
           update: (ctx, auth, previousTrainings) =>
-              Turns(auth.token, auth.userDni),
+              Turns(auth.token, auth.userDni, parseDate(auth.userExpireDate)),
         ),
         ChangeNotifierProxyProvider<Auth, Trainings>(
           create: (ctx) => Trainings(null),

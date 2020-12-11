@@ -131,7 +131,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
     ).then((_) => Navigator.of(context).pop());
   }
 
-  void showErrorDialog(BuildContext context) {
+  void showErrorDialog(BuildContext context, int code) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -156,7 +156,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
           color: Colors.red,
         ),
         content: Text(
-          "Lo sentimos hubo un error, intente de nuevo mas tarde.",
+          getMessageCode(code),
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
@@ -170,6 +170,17 @@ class _ReserveScreenState extends State<ReserveScreen> {
         ],
       ),
     ).then((_) => Navigator.of(context).pop());
+  }
+
+  String getMessageCode(int code) {
+    switch (code) {
+      case 400:
+        return "Lo sentimos, su cuota ya venció. Comuníquese con el gimnasio para abonarla y no perder su entrenamiento!";
+      case 401:
+        return "Lo sentimos, este turno ya no está dispoible, intente reservar otro horario.";
+      default:
+        return "Lo sentimos hubo un error, intente de nuevo mas tarde.";
+    }
   }
 
   int getMaxCount(String selectedHour) {
@@ -367,7 +378,10 @@ class _ReserveScreenState extends State<ReserveScreen> {
                 vertical: 10,
               ),
               child: FlatButton(
-                child: Text("Sacar Turno", style: kTitleStyle,),
+                child: Text(
+                  "Sacar Turno",
+                  style: kTitleStyle,
+                ),
                 onPressed: (_loading ||
                         _tapped ||
                         training == null ||
@@ -388,11 +402,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
                               nextClassDay(parsedSchedule).month.toString(),
                           hour: selectedHour,
                         )
-                            .then((value) {
-                          if (value)
+                            .then((code) {
+                          if (code == 200)
                             showSuccessDialog(context);
                           else
-                            showErrorDialog(context);
+                            showErrorDialog(context, code);
                         });
                       },
                 textColor: Colors.white,

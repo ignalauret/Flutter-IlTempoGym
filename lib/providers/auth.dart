@@ -9,12 +9,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth extends ChangeNotifier {
   String _token;
+
   String _refreshToken;
   DateTime _expireDate;
+  Timer _authTimer;
+  // User data
   String _userId;
   String _userName;
   String _userDni;
-  Timer _authTimer;
+  String _userExpireDate;
 
   bool get isAuth {
     return token != null;
@@ -22,6 +25,10 @@ class Auth extends ChangeNotifier {
 
   String get userId {
     return _userId;
+  }
+
+  String get userExpireDate {
+    return _userExpireDate;
   }
 
   String get token {
@@ -50,9 +57,9 @@ class Auth extends ChangeNotifier {
       // Hubo un error
       return;
     }
-
     _userName = responseData["nombre"];
     _userDni = responseData["dni"].toString();
+    _userExpireDate = responseData['vencimiento'];
   }
 
   Future<String> logIn(String username, String password) async {
@@ -96,6 +103,7 @@ class Auth extends ChangeNotifier {
       'userId': _userId,
       'userDni': _userDni,
       'userName': _userName,
+      'userExpireDate': _userExpireDate,
       'expireDate': _expireDate.toIso8601String()
     });
     prefs.setString('userData', userData);
@@ -130,6 +138,7 @@ class Auth extends ChangeNotifier {
         _expireDate = newExpiryDate;
         _userDni = extractedUserData["userDni"];
         _userName = extractedUserData["userName"];
+        _userExpireDate = extractedUserData['userExpireDate'];
         notifyListeners();
         saveToPrefs();
         return true;
@@ -145,6 +154,7 @@ class Auth extends ChangeNotifier {
     _userName = extractedUserData['userName'];
     _expireDate = expiryDate;
     _userDni = extractedUserData['userDni'];
+    _userExpireDate = extractedUserData['userExpireDate'];
     notifyListeners();
     return true;
   }

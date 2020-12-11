@@ -87,6 +87,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             InfoCard("Nombre", authData.userName),
             InfoCard("Dni", authData.userDni),
+            InfoCard("Vence", authData.userExpireDate ?? "No registrado"),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
