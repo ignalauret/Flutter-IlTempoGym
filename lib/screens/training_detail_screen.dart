@@ -146,56 +146,60 @@ class TrainingDetailScreen extends StatelessWidget {
             InfoCard("Profesor", training.teacher),
             Expanded(
               child: Container(
-                margin:
-                    EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.005),
+                margin: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.01,
+                    vertical: size.height * 0.005),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: descriptions
                       .map(
-                        (description) => Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              description,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
+                        (description) => description.isEmpty
+                            ? Container()
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    description,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Icon(
+                                    Icons.check,
+                                    color: kMainColor,
+                                    size: 20,
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              Icons.check,
-                              color: kMainColor,
-                              size: 20,
-                            ),
-                          ],
-                        ),
                       )
                       .toList(),
                 ),
               ),
             ),
-            FlatButton(
-              child: Text("Sacar Turno"),
-              padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.25, vertical: 10),
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  ReserveScreen.routeName,
-                  arguments: training,
-                );
-              },
-              textColor: Colors.white,
-              color: kMainColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(kBorderRadius),
-                side: BorderSide(
-                  color: kMainColor,
-                  width: 2,
+            Container(
+              height: 60,
+              width: size.width * 0.6,
+              margin: const EdgeInsets.symmetric(
+                vertical: 10,
+              ),
+              child: FlatButton(
+                child: Text(
+                  "Sacar Turno",
+                  style: kTitleStyle,
                 ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(ReserveScreen.routeName, arguments: training);
+                },
+                textColor: Colors.white,
+                color: kMainColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(kBorderRadius),
+                ),
+                disabledColor: Colors.grey,
               ),
             ),
           ],

@@ -93,8 +93,10 @@ class Turns extends ChangeNotifier {
     String hour,
   }) async {
     // Check if expired
-    if(userExpireDate == null) return 400;
-    if(userExpireDate.isBefore(DateTime.now().subtract(Duration(days: await expireMarginDays)))) return 400;
+    if (userExpireDate == null) return 400;
+    if (userExpireDate.isBefore(
+        DateTime.now().subtract(Duration(days: await expireMarginDays))))
+      return 400;
     // Check again if turn is available
     final List<Turn> turnsOfDay = await getTurnsOfDay(date, training.name);
     final int turnsOfHour =
@@ -111,8 +113,14 @@ class Turns extends ChangeNotifier {
         "hora": hour,
       }),
     );
-    newTurn = true;
-    return response.statusCode == 200 ? 200 : 404;
+    if (response.statusCode == 200) {
+      newTurn = true;
+      if (userExpireDate.isBefore(DateTime.now().add(Duration(days: 7))))
+        return 201;
+      return 200;
+    } else {
+      return 404;
+    }
   }
 
   Future<bool> cancelTurn(String id, String training) async {

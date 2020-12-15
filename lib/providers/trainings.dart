@@ -19,6 +19,7 @@ class Trainings with ChangeNotifier {
     final trainings = json.decode(response.body) as Map<String, dynamic>;
     trainings.forEach(
       (name, data) {
+        if(data["horario"] != null)
         _trainings.add(
           Training(
             name: name,

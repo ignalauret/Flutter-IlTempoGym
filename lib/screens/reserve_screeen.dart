@@ -90,7 +90,7 @@ class _ReserveScreenState extends State<ReserveScreen> {
     });
   }
 
-  void showSuccessDialog(BuildContext context) {
+  void showSuccessDialog(BuildContext context, {bool expireWarning = false}) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -115,7 +115,10 @@ class _ReserveScreenState extends State<ReserveScreen> {
           color: Colors.green,
         ),
         content: Text(
-          "Turno reservado para ${training.name} el dia ${nextClassDay(parsedSchedule).day.toString() + "/" + nextClassDay(parsedSchedule).month.toString()} a las $selectedHour",
+          "Turno reservado para ${training.name} el dia ${nextClassDay(parsedSchedule).day.toString() + "/" + nextClassDay(parsedSchedule).month.toString()} a las $selectedHour." +
+              (expireWarning
+                  ? " No olvide que su cuota vence en menos de una semana!"
+                  : ""),
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
@@ -405,6 +408,8 @@ class _ReserveScreenState extends State<ReserveScreen> {
                             .then((code) {
                           if (code == 200)
                             showSuccessDialog(context);
+                          else if (code == 201)
+                            showSuccessDialog(context, expireWarning: true);
                           else
                             showErrorDialog(context, code);
                         });
