@@ -28,7 +28,6 @@ class Auth extends ChangeNotifier {
   }
 
   String get userExpireDate {
-    return "21/12/2020";
     return _userExpireDate;
   }
 

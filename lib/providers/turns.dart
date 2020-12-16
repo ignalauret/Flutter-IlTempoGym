@@ -30,7 +30,7 @@ class Turns extends ChangeNotifier {
 
   Future<void> getExpireMargin() async {
     final response = await http.get(
-        'https://il-tempo-dda8e.firebaseio.com/expireMargin.json?auth=$authToken');
+        'https://il-tempo-dda8e.firebaseio.com/config/expireMargin.json?auth=$authToken');
     if (response.statusCode == 200) {
       _expireMarginDays = int.parse(response.body);
       notifyListeners();
