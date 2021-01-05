@@ -41,25 +41,22 @@ class Auth extends ChangeNotifier {
   }
 
   String get userName {
-    return _userName == null ? "Cargando..." : _userName;
+    return _userName ?? "Cargando...";
   }
 
   String get userDni {
-    return _userDni == null ? "Cargando..." : _userDni;
+    return _userDni ?? "Cargando...";
   }
 
   Future<void> fetchUserData() async {
     final response = await http.get(
         "https://il-tempo-dda8e.firebaseio.com/usuarios/$_userId.json?auth=$_token");
-    final responseData = json.decode(response.body);
-    if (responseData == null) return;
-    if (responseData["error"] != null) {
-      // Hubo un error
-      return;
+    if(response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      _userName = responseData["nombre"];
+      _userDni = responseData["dni"].toString();
+      _userExpireDate = responseData['vencimiento'];
     }
-    _userName = responseData["nombre"];
-    _userDni = responseData["dni"].toString();
-    _userExpireDate = responseData['vencimiento'];
   }
 
   Future<String> logIn(String username, String password) async {
@@ -101,9 +98,6 @@ class Auth extends ChangeNotifier {
       'token': _token,
       'refreshToken': _refreshToken,
       'userId': _userId,
-      'userDni': _userDni,
-      'userName': _userName,
-      'userExpireDate': _userExpireDate,
       'expireDate': _expireDate.toIso8601String()
     });
     prefs.setString('userData', userData);
@@ -112,7 +106,6 @@ class Auth extends ChangeNotifier {
   Future<bool> tryAutoLogIn() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
-      print("No user data");
       return false;
     }
     final extractedUserData =
@@ -136,14 +129,11 @@ class Auth extends ChangeNotifier {
         _refreshToken = userData["refresh_token"];
         _userId = extractedUserData["userId"];
         _expireDate = newExpiryDate;
-        _userDni = extractedUserData["userDni"];
-        _userName = extractedUserData["userName"];
-        _userExpireDate = extractedUserData['userExpireDate'];
+        await fetchUserData();
         notifyListeners();
         saveToPrefs();
         return true;
       } else {
-        print("Failed refresh");
         return false;
       }
     }
@@ -151,10 +141,8 @@ class Auth extends ChangeNotifier {
     _token = extractedUserData['token'];
     _refreshToken = extractedUserData['refreshToken'];
     _userId = extractedUserData['userId'];
-    _userName = extractedUserData['userName'];
     _expireDate = expiryDate;
-    _userDni = extractedUserData['userDni'];
-    _userExpireDate = extractedUserData['userExpireDate'];
+    await fetchUserData();
     notifyListeners();
     return true;
   }
