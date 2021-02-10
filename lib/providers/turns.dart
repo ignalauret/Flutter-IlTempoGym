@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:iltempo/models/training.dart';
+import 'package:iltempo/providers/trainings.dart';
+import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
 import '../models/turn.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
 class Turns extends ChangeNotifier {
   Turns(this.authToken, this.userDni, this.userExpireDate);
@@ -29,8 +32,8 @@ class Turns extends ChangeNotifier {
   }
 
   Future<void> getExpireMargin() async {
-    final response = await http.get(
-        'https://il-tempo-dda8e.firebaseio.com/config/expireMargin.json?auth=$authToken');
+    final response = await http
+        .get(kFirebaseUrl + '/config/expireMargin.json?auth=$authToken');
     if (response.statusCode == 200) {
       _expireMarginDays = int.parse(response.body);
       notifyListeners();
@@ -41,8 +44,8 @@ class Turns extends ChangeNotifier {
     if (_turns.isNotEmpty && !_newTurn) return [..._turns];
     _turns = [];
     _newTurn = false;
-    final response = await http.get(
-        'https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken&orderBy="dni"&equalTo="$userDni"');
+    final response = await http.get(kFirebaseUrl +
+        '/turnos.json?auth=$authToken&orderBy="dni"&equalTo="$userDni"');
     if (response == null) return [];
     final turns = json.decode(response.body) as Map<String, dynamic>;
     turns.forEach((id, data) {
@@ -58,8 +61,8 @@ class Turns extends ChangeNotifier {
   }
 
   Future<List<Turn>> getTurnsOfDay(String day, String training) async {
-    final response = await http.get(
-        'https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken&orderBy="fecha"&equalTo="$day"');
+    final response = await http.get(kFirebaseUrl +
+        '/turnos.json?auth=$authToken&orderBy="fecha"&equalTo="$day"');
     if (response == null) return [];
     final turns = json.decode(response.body) as Map<String, dynamic>;
     final List<Turn> result = [];
@@ -81,11 +84,13 @@ class Turns extends ChangeNotifier {
   /*
     Return codes:
       - 200: Success, created turn.
+      - 201: Success, but expires soon.
       - 400: Error, user payment expired.
       - 401: Error, turn no longer available.
       - 404: Error, server side.
    */
   Future<int> createTurn({
+    BuildContext context,
     Training training,
     String dni,
     String name,
@@ -101,10 +106,17 @@ class Turns extends ChangeNotifier {
     final List<Turn> turnsOfDay = await getTurnsOfDay(date, training.name);
     final int turnsOfHour =
         turnsOfDay.fold(0, (prev, turn) => turn.hour == hour ? prev + 1 : prev);
-    if (turnsOfHour >= training.maxSchedules) return 401;
+    final selectedDate = DateTime(
+      DateTime.now().year,
+      int.parse(date.split("/").last),
+      int.parse(date.split("/").first),
+      int.parse(hour.split(":").first),
+      int.parse(hour.split(":").last),
+    );
+    if (turnsOfHour >= getMaxCount(context, training, selectedDate)) return 401;
     // Create the turn
     final response = await http.post(
-      "https://il-tempo-dda8e.firebaseio.com/turnos.json?auth=$authToken",
+      kFirebaseUrl + "/turnos.json?auth=$authToken",
       body: json.encode({
         "dni": dni,
         "nombre": name,
@@ -123,10 +135,18 @@ class Turns extends ChangeNotifier {
     }
   }
 
+  int getMaxCount(
+      BuildContext context, Training training, DateTime selectedDate) {
+    if (training.name != "Musculación") return training.maxSchedules;
+    final maxSchedules = Provider.of<Trainings>(context, listen: false)
+        .getMaxSchedule(training, selectedDate);
+    return maxSchedules;
+  }
+
   Future<bool> cancelTurn(String id, String training) async {
     // Remove from DB
-    final response = await http.delete(
-        "https://il-tempo-dda8e.firebaseio.com/turnos/$id.json?auth=$authToken");
+    final response =
+        await http.delete(kFirebaseUrl + "/turnos/$id.json?auth=$authToken");
     if (response.statusCode == 200) {
       // Remove from memory
       _turns.removeWhere((turn) => turn.id == id);

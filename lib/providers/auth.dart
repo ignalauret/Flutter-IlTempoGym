@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:iltempo/models/http_exception.dart';
+import 'package:iltempo/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth extends ChangeNotifier {
@@ -50,7 +51,7 @@ class Auth extends ChangeNotifier {
 
   Future<void> fetchUserData() async {
     final response = await http.get(
-        "https://il-tempo-dda8e.firebaseio.com/usuarios/$_userId.json?auth=$_token");
+        kFirebaseUrl + "/usuarios/$_userId.json?auth=$_token");
     if(response.statusCode == 200) {
       final responseData = json.decode(response.body);
       _userName = responseData["nombre"];
