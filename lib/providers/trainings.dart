@@ -31,41 +31,35 @@ class Trainings with ChangeNotifier {
               interval: data["intervalo"] == null
                   ? 0
                   : int.parse(data["intervalo"].toString()),
-              schedule: [
-                [
-                  DateTime(2021, 7, 4, 9),
-                  DateTime(2021, 7, 4, 18),
-                ],
-              ],
-              // schedule: (data["horario"] as List).map((schedule) {
-              //   List<String> date = schedule.toString().split(".");
-              //   final List<DateTime> result = [];
-              //   if (schedule.toString().contains("a")) {
-              //     List<String> dates = schedule.toString().split("a");
-              //     dates.forEach((date) {
-              //       final splitDate = date.split(".");
-              //       result.add(
-              //         DateTime(
-              //           2020,
-              //           int.parse(splitDate[0]),
-              //           int.parse(splitDate[1]),
-              //           int.parse(splitDate[2]),
-              //           int.parse(splitDate[3]),
-              //         ),
-              //       );
-              //     });
-              //   } else
-              //     result.add(
-              //       DateTime(
-              //         2020,
-              //         int.parse(date[0]),
-              //         int.parse(date[1]),
-              //         int.parse(date[2]),
-              //         int.parse(date[3]),
-              //       ),
-              //     );
-              //   return result;
-              // }).toList(),
+              schedule: (data["horario"] as List).map((schedule) {
+                List<String> date = schedule.toString().split(".");
+                final List<DateTime> result = [];
+                if (schedule.toString().contains("a")) {
+                  List<String> dates = schedule.toString().split("a");
+                  dates.forEach((date) {
+                    final splitDate = date.split(".");
+                    result.add(
+                      DateTime(
+                        2020,
+                        int.parse(splitDate[0]),
+                        int.parse(splitDate[1]),
+                        int.parse(splitDate[2]),
+                        int.parse(splitDate[3]),
+                      ),
+                    );
+                  });
+                } else
+                  result.add(
+                    DateTime(
+                      2020,
+                      int.parse(date[0]),
+                      int.parse(date[1]),
+                      int.parse(date[2]),
+                      int.parse(date[3]),
+                    ),
+                  );
+                return result;
+              }).toList(),
               maxSchedules: data["maxSchedules"],
               freeGymMaxSchedules: name == "Musculación"
                   ? data["freeGymMaxSchedules"]
