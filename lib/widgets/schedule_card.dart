@@ -3,12 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:iltempo/utils/constants.dart';
 
 class ScheduleCard extends StatelessWidget {
-  ScheduleCard({this.day, this.hours, this.size, this.withSaturday});
+  ScheduleCard({this.day, this.hours, this.size});
 
   final String day;
   final List<String> hours;
   final Size size;
-  final bool withSaturday;
 
   List<Widget> _buildBody(BuildContext context) {
     List<Widget> hoursWidgets = [];
@@ -62,48 +61,24 @@ class ScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return withSaturday
-        ? Container(
-            margin: EdgeInsets.all(size.width * 0.013),
-            padding: EdgeInsets.only(
-                left: size.height * 0.006,
-                right: size.height * 0.006,
-                top: size.height * 0.006,
-                bottom: size.height * 0.015),
-            width: size.width * 0.14,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kBorderRadius),
-              color: Colors.transparent,
-              border: Border.all(
-                color: kMainColor,
-                width: 2,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: _buildBody(context),
-            ),
-          )
-        : Container(
-            margin: EdgeInsets.all(size.width * 0.025),
-            padding: EdgeInsets.only(
-                left: size.height * 0.006,
-                right: size.height * 0.006,
-                top: size.height * 0.006,
-                bottom: size.height * 0.015),
-            width: size.width * 0.15,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kBorderRadius),
-              color: Colors.transparent,
-              border: Border.all(
-                color: kMainColor,
-                width: 2,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: _buildBody(context),
-            ),
-          );
+    if (hours.isEmpty) return SizedBox();
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(kBorderRadius),
+          color: Colors.transparent,
+          border: Border.all(
+            color: kMainColor,
+            width: 2,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: _buildBody(context),
+        ),
+      ),
+    );
   }
 }

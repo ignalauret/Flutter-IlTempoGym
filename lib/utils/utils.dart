@@ -49,6 +49,8 @@ int dayToInt(String day) {
       return 5;
     case "Sab":
       return 6;
+    case 'Dom':
+      return 7;
   }
   return 1;
 }
@@ -67,6 +69,8 @@ String intToDay(int weekday) {
       return "Vie";
     case (6):
       return "Sab";
+    case (7):
+      return 'Dom';
   }
   return "Lun";
 }
@@ -119,6 +123,9 @@ String formatDate(DateTime date) {
     case 6:
       day = "Sábado";
       break;
+    case 7:
+      day = "Domingo";
+      break;
   }
   String number = date.day.toString();
   String month = "";
@@ -163,8 +170,14 @@ String formatDate(DateTime date) {
   return "$day $number de $month";
 }
 
+String unParseDate(DateTime date) {
+  final month = date.month;
+  final day = date.day;
+  return '$day/$month';
+}
+
 DateTime parseDate(String date) {
-  if(date == null) return null;
+  if (date == null) return null;
   final arr = date.split("/");
   return DateTime(int.parse(arr[2]), int.parse(arr[1]), int.parse(arr[0]));
 }

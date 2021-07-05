@@ -240,190 +240,181 @@ class _ReserveScreenState extends State<ReserveScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: RefreshIndicator(
-        onRefresh: () {
-          return fetchTurns(training);
-        },
-        color: kMainColor,
-        backgroundColor: Colors.white70,
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: size.height - 100,
-              width: size.width,
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Container(
-                  padding: EdgeInsets.only(bottom: size.height * 0.02),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () {
+            return fetchTurns(training);
+          },
+          color: kMainColor,
+          backgroundColor: Colors.white70,
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: size.height * 0.02,
+            ),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
                     children: <Widget>[
-                      Container(
-                        child: Column(
-                          children: <Widget>[
-                            Stack(
-                              children: <Widget>[
-                                Container(
-                                  height: size.height * 0.3,
-                                  width: double.infinity,
-                                  child: Image.asset(
-                                    "assets/img/logo_il_tempo.png",
-                                  ),
-                                ),
-                                Positioned(
-                                  top: size.height * 0.035,
-                                  left: size.width * 0.02,
-                                  child: FlatButton(
-                                    padding: EdgeInsets.only(
-                                        left: 0, right: size.width * 0.05),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.chevron_left,
-                                          size: 25,
-                                          color: kMainColor,
-                                        ),
-                                        Text(
-                                          "Volver",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                      ],
-                                    ),
-                                    color: Colors.white70,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(kBorderRadius),
-                                    ),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                  ),
-                                ),
-                              ],
+                      Stack(
+                        children: <Widget>[
+                          Container(
+                            height: size.height * 0.3,
+                            width: double.infinity,
+                            child: Image.asset(
+                              "assets/img/logo_il_tempo.png",
                             ),
-                            InfoCard(
-                                "Actividad",
-                                training == null
-                                    ? "Cargando..."
-                                    : training.name),
-                            InfoCard(
-                                "Dia",
-                                counts.isEmpty
-                                    ? "Cargando..."
-                                    : formatDate(nextClassDay(parsedSchedule))),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: size.height * 0.007,
-                              ),
-                              width: size.width,
-                              child: Column(
+                          ),
+                          Positioned(
+                            top: 8,
+                            left: size.width * 0.02,
+                            child: FlatButton(
+                              padding: EdgeInsets.only(
+                                  left: 0, right: size.width * 0.05),
+                              child: Row(
                                 children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Elige un horario",
-                                      style: kTitleStyle,
-                                    ),
+                                  Icon(
+                                    Icons.chevron_left,
+                                    size: 25,
+                                    color: kMainColor,
                                   ),
-                                  SizedBox(height: 5),
-                                  Container(
-                                    width: size.width,
-                                    child: GridView(
-                                      gridDelegate:
-                                          SliverGridDelegateWithMaxCrossAxisExtent(
-                                        maxCrossAxisExtent: 80,
-                                        childAspectRatio: 3 / 2,
-                                      ),
-                                      padding: const EdgeInsets.all(0),
-                                      shrinkWrap: true,
-                                      children: _buildHourSelector(training),
-                                      scrollDirection: Axis.vertical,
-                                      physics: NeverScrollableScrollPhysics(),
-                                    ),
+                                  Text(
+                                    "Volver",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 15),
                                   ),
                                 ],
                               ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                bottom: 10,
+                              color: Colors.white70,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(kBorderRadius),
                               ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      InfoCard("Actividad",
+                          training == null ? "Cargando..." : training.name),
+                      InfoCard(
+                          "Dia",
+                          counts.isEmpty
+                              ? "Cargando..."
+                              : formatDate(nextClassDay(parsedSchedule))),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: size.height * 0.007,
+                        ),
+                        width: size.width,
+                        child: Column(
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(
-                                _loading || training == null
-                                    ? "Cargando..."
-                                    : hasReserved[selectedHour]
-                                        ? "Usted ya tiene una reserva para esta clase."
-                                        : counts[selectedHour] <
-                                                getMaxCount(selectedHour)
-                                            ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${getMaxCount(selectedHour)}"
-                                            : "Lo sentimos, la clase de las $selectedHour está llena",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                ),
+                                "Elige un horario",
+                                style: kTitleStyle,
                               ),
                             ),
-                            InfoCard("Nombre", name),
-                            InfoCard("Dni", dni),
+                            SizedBox(height: 5),
+                            Container(
+                              width: size.width,
+                              child: GridView(
+                                gridDelegate:
+                                    SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 80,
+                                  childAspectRatio: 3 / 2,
+                                ),
+                                padding: const EdgeInsets.all(0),
+                                shrinkWrap: true,
+                                children: _buildHourSelector(training),
+                                scrollDirection: Axis.vertical,
+                                physics: NeverScrollableScrollPhysics(),
+                              ),
+                            ),
                           ],
                         ),
                       ),
+                      Container(
+                        margin: const EdgeInsets.only(
+                          bottom: 10,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          _loading || training == null
+                              ? "Cargando..."
+                              : hasReserved[selectedHour]
+                                  ? "Usted ya tiene una reserva para esta clase."
+                                  : counts[selectedHour] <
+                                          getMaxCount(selectedHour)
+                                      ? "Anotados para las $selectedHour: ${counts[selectedHour]} de ${getMaxCount(selectedHour)}"
+                                      : "Lo sentimos, la clase de las $selectedHour está llena",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      InfoCard("Nombre", name),
+                      InfoCard("Dni", dni),
                     ],
                   ),
                 ),
-              ),
-            ),
-            Container(
-              height: 60,
-              width: size.width * 0.6,
-              margin: const EdgeInsets.symmetric(
-                vertical: 10,
-              ),
-              child: FlatButton(
-                child: Text(
-                  "Sacar Turno",
-                  style: kTitleStyle,
+                Container(
+                  height: 60,
+                  width: size.width * 0.6,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 10,
+                  ),
+                  child: FlatButton(
+                    child: Text(
+                      "Sacar Turno",
+                      style: kTitleStyle,
+                    ),
+                    onPressed: (_loading ||
+                            _tapped ||
+                            training == null ||
+                            counts[selectedHour] >= getMaxCount(selectedHour) ||
+                            hasReserved[selectedHour])
+                        ? null
+                        : () {
+                            setState(() {
+                              _tapped = true;
+                            });
+                            Provider.of<Turns>(context, listen: false)
+                                .createTurn(
+                              context: context,
+                              training: training,
+                              dni: dni,
+                              name: name,
+                              date: nextClassDay(parsedSchedule)
+                                      .day
+                                      .toString() +
+                                  "/" +
+                                  nextClassDay(parsedSchedule).month.toString(),
+                              hour: selectedHour,
+                            )
+                                .then((code) {
+                              if (code == 200)
+                                showSuccessDialog(context);
+                              else if (code == 201)
+                                showSuccessDialog(context, expireWarning: true);
+                              else
+                                showErrorDialog(context, code);
+                            });
+                          },
+                    textColor: Colors.white,
+                    color: kMainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(kBorderRadius),
+                    ),
+                    disabledColor: Colors.grey,
+                  ),
                 ),
-                onPressed: (_loading ||
-                        _tapped ||
-                        training == null ||
-                        counts[selectedHour] >= getMaxCount(selectedHour) ||
-                        hasReserved[selectedHour])
-                    ? null
-                    : () {
-                        setState(() {
-                          _tapped = true;
-                        });
-                        Provider.of<Turns>(context, listen: false)
-                            .createTurn(
-                          context: context,
-                          training: training,
-                          dni: dni,
-                          name: name,
-                          date: nextClassDay(parsedSchedule).day.toString() +
-                              "/" +
-                              nextClassDay(parsedSchedule).month.toString(),
-                          hour: selectedHour,
-                        )
-                            .then((code) {
-                          if (code == 200)
-                            showSuccessDialog(context);
-                          else if (code == 201)
-                            showSuccessDialog(context, expireWarning: true);
-                          else
-                            showErrorDialog(context, code);
-                        });
-                      },
-                textColor: Colors.white,
-                color: kMainColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(kBorderRadius),
-                ),
-                disabledColor: Colors.grey,
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

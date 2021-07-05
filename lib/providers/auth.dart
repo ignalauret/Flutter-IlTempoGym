@@ -50,9 +50,9 @@ class Auth extends ChangeNotifier {
   }
 
   Future<void> fetchUserData() async {
-    final response = await http.get(
-        kFirebaseUrl + "/usuarios/$_userId.json?auth=$_token");
-    if(response.statusCode == 200) {
+    final response =
+        await http.get(kFirebaseUrl + "/usuarios/$_userId.json?auth=$_token");
+    if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       _userName = responseData["nombre"];
       _userDni = responseData["dni"].toString();

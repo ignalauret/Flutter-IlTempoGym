@@ -60,7 +60,7 @@ class SingleTrainingCard extends StatelessWidget {
                         training.teacher,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          color: const Color(0xff9a9491),
+                          color: Colors.white,
                           fontSize: 15,
                         ),
                       ),
