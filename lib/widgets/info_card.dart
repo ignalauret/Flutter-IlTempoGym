@@ -5,6 +5,7 @@ class InfoCard extends StatelessWidget {
   InfoCard(this.hint, this.value);
   final String hint;
   final String value;
+
   @override
   Widget build(BuildContext context) {
     return Container(
