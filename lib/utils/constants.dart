@@ -12,7 +12,7 @@ const TextStyle kTitleStyle = TextStyle(
   fontSize: 20,
 );
 
-const Color kMainColor = const Color(0xffa7250c);
+const Color kMainColor = const Color(0xff247DE1);
 const Color kCardColor = const Color(0xff1b222c);
 
 const double kBorderRadius = 15;

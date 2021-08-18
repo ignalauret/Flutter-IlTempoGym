@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:iltempo/utils/constants.dart';
 import 'package:iltempo/utils/utils.dart';
 import '../models/training.dart';
