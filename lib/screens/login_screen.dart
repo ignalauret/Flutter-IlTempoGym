@@ -31,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
           left: 20,
           right: 20,
         ),
-
         title: Text(
           "Error en la autenticación",
           style: TextStyle(color: Colors.red),
@@ -118,48 +117,86 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _loadingNotifier = ValueNotifier<bool>(false);
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        height: size.height,
-        width: size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset("assets/img/logo_il_tempo.png"),
-            _buildInputText(_usernameController, "Usuario", false),
-            _buildInputText(_passwordController, "Contraseña", true),
-            SizedBox(
-              height: 35,
-            ),
-            FlatButton(
-              child: Text("Ingresar"),
-              padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.25,
-                  vertical: 10),
-              onPressed: () async {
-                String result = await Provider.of<Auth>(context, listen: false)
-                    .logIn(_usernameController.text, _passwordController.text);
-                if (result.isEmpty) return;
-                var errorMessage =
-                    "Lo sentimos hubo un problema, intentelo denuevo mas tarde";
-                if (result.contains("INVALID_PASSWORD")) {
-                  errorMessage = "Contraseña incorrecta";
-                } else if (result.contains("EMAIL_NOT_FOUND")) {
-                  errorMessage = "Usuario no encontrado";
-                } else if (result.contains("INVALID_EMAIL")) {
-                  errorMessage = "Usuario invalido";
-                }
-                _showErrorMessage(errorMessage);
-              },
-              textColor: Colors.white,
-              color: kMainColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(kBorderRadius),
+      body: SingleChildScrollView(
+        child: Container(
+          height: size.height,
+          width: size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Image.asset("assets/img/logo_il_tempo_new.jpg"),
               ),
-              disabledColor: Colors.grey,
-            ),
-          ],
+              _buildInputText(_usernameController, "Usuario", false),
+              _buildInputText(_passwordController, "Contraseña", true),
+              SizedBox(
+                height: 35,
+              ),
+              ValueListenableBuilder<bool>(
+                  valueListenable: _loadingNotifier,
+                  builder: (context, loading, _) {
+                    return TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              kBorderRadius,
+                            ),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(kMainColor),
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                            horizontal: 38,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        _loadingNotifier.value = true;
+                        String result =
+                            await Provider.of<Auth>(context, listen: false)
+                                .logIn(_usernameController.text,
+                                    _passwordController.text);
+                        _loadingNotifier.value = false;
+                        if (result.isEmpty) return;
+                        var errorMessage =
+                            "Lo sentimos hubo un problema, inténtelo de nuevo más tarde";
+                        if (result.contains("INVALID_PASSWORD")) {
+                          errorMessage = "Contraseña incorrecta";
+                        } else if (result.contains("EMAIL_NOT_FOUND")) {
+                          errorMessage = "Usuario no encontrado";
+                        } else if (result.contains("INVALID_EMAIL")) {
+                          errorMessage = "Usuario invalido";
+                        }
+                        _showErrorMessage(errorMessage);
+                      },
+                      child: Container(
+                        width: 80,
+                        height: 30,
+                        alignment: Alignment.center,
+                        child: loading
+                            ? const SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(),
+                              )
+                            : const Text(
+                                'Ingresar',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    );
+                  })
+            ],
+          ),
         ),
       ),
     );

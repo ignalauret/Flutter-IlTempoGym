@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             canvasColor: Colors.transparent,
             primarySwatch: Colors.blue,
-            accentColor: const Color(0xffe36e61),
+            accentColor: const Color(0xff247DE1),
           ),
           // If i am authenticated, start at home page, else go to login screen.
           home: authData.isAuth
