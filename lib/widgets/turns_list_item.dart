@@ -3,9 +3,10 @@ import 'package:iltempo/models/turn.dart';
 import 'package:iltempo/utils/constants.dart';
 
 class TurnsListItem extends StatelessWidget {
-  TurnsListItem(this.turn, this.color);
+  TurnsListItem(this.turn, this.color, this.deleteFunction);
   final Turn turn;
   final Color color;
+  final Function deleteFunction;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,6 +56,16 @@ class TurnsListItem extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
+            ),
+          ),
+          Container(
+            height: 45,
+            width: 45,
+            margin: EdgeInsets.symmetric(horizontal: 2.5),
+            child: IconButton(
+              onPressed: deleteFunction,
+              icon: Icon(Icons.delete, size: 25,),
+              color: Colors.red,
             ),
           ),
         ],

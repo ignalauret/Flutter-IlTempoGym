@@ -259,10 +259,11 @@ class _ReserveScreenState extends State<ReserveScreen> {
                       Stack(
                         children: <Widget>[
                           Container(
+                            padding: EdgeInsets.all(13.0),
                             height: size.height * 0.3,
                             width: double.infinity,
                             child: Image.asset(
-                              "assets/img/logo_il_tempo.png",
+                              "assets/img/logo_il_tempo_new.jpg",
                             ),
                           ),
                           Positioned(
@@ -302,6 +303,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
                           counts.isEmpty
                               ? "Cargando..."
                               : formatDate(nextClassDay(parsedSchedule))),
+                      SizedBox(
+                        height: 16,
+                      ),
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 15,
@@ -335,6 +339,9 @@ class _ReserveScreenState extends State<ReserveScreen> {
                             ),
                           ],
                         ),
+                      ),
+                      SizedBox(
+                        height: 16,
                       ),
                       Container(
                         margin: const EdgeInsets.only(

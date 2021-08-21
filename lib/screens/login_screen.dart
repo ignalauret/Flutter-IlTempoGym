@@ -11,6 +11,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _loadingNotifier = ValueNotifier<bool>(false);
 
   void _showErrorMessage(String message) {
     showDialog(
@@ -117,7 +118,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _loadingNotifier = ValueNotifier<bool>(false);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(30.0),
+                padding: const EdgeInsets.all(32.0),
                 child: Image.asset("assets/img/logo_il_tempo_new.jpg"),
               ),
               _buildInputText(_usernameController, "Usuario", false),

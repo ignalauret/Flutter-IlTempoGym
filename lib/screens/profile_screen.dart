@@ -88,6 +88,9 @@ class ProfileScreen extends StatelessWidget {
             InfoCard("Nombre", authData.userName),
             InfoCard("Dni", authData.userDni),
             InfoCard("Vence", authData.userExpireDate ?? "No registrado"),
+            SizedBox(
+              height: 16,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -95,7 +98,7 @@ class ProfileScreen extends StatelessWidget {
                   margin: const EdgeInsets.only(
                     left: 20,
                     top: 15,
-                    bottom: 10,
+                    bottom: 20,
                   ),
                   child: Text(
                     "Mis turnos",

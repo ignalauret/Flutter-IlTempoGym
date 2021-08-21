@@ -76,107 +76,121 @@ class TrainingDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(
-                      left: 20,
-                      top: 15,
-                      bottom: 10,
-                    ),
-                    child: Text(
-                      "Horarios",
-                      textAlign: TextAlign.center,
-                      style: kTitleStyle,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      right: 20,
-                      top: 15,
-                      bottom: 10,
-                    ),
-                    child: Row(
+              Expanded(
+                child: ListView(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Icon(
-                          Icons.timer,
-                          color: Colors.white70,
-                          size: 20,
+                        Container(
+                          margin: const EdgeInsets.only(
+                            left: 20,
+                            top: 15,
+                            bottom: 10,
+                          ),
+                          child: Text(
+                            "Horarios",
+                            textAlign: TextAlign.center,
+                            style: kTitleStyle,
+                          ),
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Duración: ${training.duration}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
+                        Container(
+                          margin: const EdgeInsets.only(
+                            right: 20,
+                            top: 15,
+                            bottom: 10,
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.timer,
+                                color: Colors.white70,
+                                size: 20,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Duración: ${training.duration}",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                width: size.width,
-                height: size.height * 0.15,
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: size.height * 0.006,
-                ),
-                child: Row(
-                  children: List.generate(
-                    7,
-                    (index) => ScheduleCard(
-                      day: days[index],
-                      hours: hoursOfDay(
-                        training.schedule,
-                        days[index],
+                    Container(
+                      width: size.width,
+                      height: size.height * 0.15,
+                      margin: EdgeInsets.only(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: size.height * 0.006,
                       ),
-                      size: size,
+                      child: Row(
+                        children: List.generate(
+                          7,
+                          (index) => ScheduleCard(
+                            day: days[index],
+                            hours: hoursOfDay(
+                              training.schedule,
+                              days[index],
+                            ),
+                            size: size,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              InfoCard("Profesor", training.teacher),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.01,
-                      vertical: size.height * 0.005),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: descriptions
-                        .map(
-                          (description) => description.isEmpty
-                              ? Container()
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      description,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                      ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Column(
+                      children: [
+                        InfoCard("Profesor", training.teacher),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.01,
+                          vertical: size.height * 0.005),
+                      child: Column(
+                        children: descriptions
+                            .map(
+                              (description) => description.isEmpty
+                                  ? Container()
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          description,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Icon(
+                                          Icons.check,
+                                          color: kMainColor,
+                                          size: 20,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Icon(
-                                      Icons.check,
-                                      color: kMainColor,
-                                      size: 20,
-                                    ),
-                                  ],
-                                ),
-                        )
-                        .toList(),
-                  ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Container(

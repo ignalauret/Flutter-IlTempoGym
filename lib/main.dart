@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iltempo/providers/auth.dart';
 import 'package:iltempo/providers/turns.dart';
 import 'package:iltempo/screens/home_page.dart';
@@ -11,7 +12,14 @@ import 'package:iltempo/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'providers/trainings.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
