@@ -165,26 +165,31 @@ class TrainingDetailScreen extends StatelessWidget {
                             .map(
                               (description) => description.isEmpty
                                   ? Container()
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          description,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
+                                  : Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 5,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            description,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Icon(
-                                          Icons.check,
-                                          color: kMainColor,
-                                          size: 20,
-                                        ),
-                                      ],
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.check,
+                                            color: kMainColor,
+                                            size: 20,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                             )
                             .toList(),

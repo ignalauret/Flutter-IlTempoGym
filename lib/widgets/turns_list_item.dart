@@ -7,6 +7,7 @@ class TurnsListItem extends StatelessWidget {
   final Turn turn;
   final Color color;
   final Function deleteFunction;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,11 +63,16 @@ class TurnsListItem extends StatelessWidget {
             height: 45,
             width: 45,
             margin: EdgeInsets.symmetric(horizontal: 2.5),
-            child: IconButton(
-              onPressed: deleteFunction,
-              icon: Icon(Icons.delete, size: 25,),
-              color: Colors.red,
-            ),
+            child: turn.hasPassed
+                ? SizedBox()
+                : IconButton(
+                    onPressed: deleteFunction,
+                    icon: Icon(
+                      Icons.delete,
+                      size: 25,
+                    ),
+                    color: Colors.red,
+                  ),
           ),
         ],
       ),

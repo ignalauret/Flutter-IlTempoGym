@@ -61,7 +61,7 @@ class ScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (hours.isEmpty) return SizedBox();
+    if (day == 'Dom') return SizedBox();
     return Expanded(
       child: Container(
         margin: const EdgeInsets.all(4),

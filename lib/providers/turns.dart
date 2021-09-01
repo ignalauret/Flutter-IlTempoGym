@@ -50,10 +50,11 @@ class Turns extends ChangeNotifier {
     final turns = json.decode(response.body) as Map<String, dynamic>;
     turns.forEach((id, data) {
       Turn turn = Turn(
-          id: id,
-          hour: data["hora"],
-          training: data["clase"],
-          date: data["fecha"]);
+        id: id,
+        hour: data["hora"],
+        training: data["clase"],
+        date: data["fecha"],
+      );
       _turns.add(turn);
     });
     _turns.sort((turn1, turn2) => compareDates(turn1.date, turn2.date) * -1);
