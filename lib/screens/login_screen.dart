@@ -133,9 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               _buildInputText(_usernameController, "Usuario", false),
               _buildInputText(_passwordController, "Contraseña", true),
-              SizedBox(
-                height: 35,
-              ),
+              SizedBox(height: 35),
               ValueListenableBuilder<bool>(
                   valueListenable: _loadingNotifier,
                   builder: (context, loading, _) {
@@ -176,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         _showErrorMessage(errorMessage);
                       },
                       child: Container(
-                        width: 80,
+                        width: 100,
                         height: 30,
                         alignment: Alignment.center,
                         child: loading
